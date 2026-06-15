@@ -1,9 +1,10 @@
 from orcalogy.domain.errors import (
-    BudgetClosedException,
-    BudgetOverrunException,
-    CategoryNotFoundException,
+    BudgetClosedError,
+    BudgetOverrunError,
+    CategoryNotFoundError,
     DomainError,
-    DuplicateCategoryException,
+    DuplicateCategoryError,
+    NegativeAmountError,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
 from orcalogy.domain.ranking import CategoryRankingItem, calculate_ranking
@@ -12,14 +13,15 @@ from orcalogy.domain.validation import LimitValidator
 __all__ = [
     "Budget",
     "BudgetCategory",
-    "BudgetClosedException",
-    "BudgetOverrunException",
-    "CategoryNotFoundException",
+    "BudgetClosedError",
+    "BudgetOverrunError",
+    "CategoryNotFoundError",
     "CategoryRankingItem",
     "DomainError",
-    "DuplicateCategoryException",
+    "DuplicateCategoryError",
     "LimitValidator",
     "Money",
+    "NegativeAmountError",
     "Transaction",
     "calculate_ranking",
 ]

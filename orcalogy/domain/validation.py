@@ -1,4 +1,4 @@
-from orcalogy.domain.errors import BudgetOverrunException, CategoryNotFoundException
+from orcalogy.domain.errors import BudgetOverrunError, CategoryNotFoundError
 from orcalogy.domain.models import Budget, Money, Transaction
 
 
@@ -9,7 +9,7 @@ class LimitValidator:
     def check_overrun(budget: Budget, category_name: str, amount: Money) -> bool:
         """Check if adding an amount to a category would overrun its budget limit."""
         if category_name not in budget.categories:
-            raise CategoryNotFoundException(
+            raise CategoryNotFoundError(
                 f"Category '{category_name}' is not registered in this budget."
             )
         category = budget.categories[category_name]
@@ -32,6 +32,6 @@ class LimitValidator:
         )
         if has_overrun and not force:
             category = budget.categories[transaction.category]
-            raise BudgetOverrunException(
+            raise BudgetOverrunError(
                 f"Transaction exceeds '{category.name}' limit of {category.limit}."
             )

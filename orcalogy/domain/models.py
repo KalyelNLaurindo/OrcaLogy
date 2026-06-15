@@ -6,8 +6,9 @@ from decimal import Decimal
 from typing import Any, Union
 
 from orcalogy.domain.errors import (
-    BudgetClosedException,
-    DuplicateCategoryException,
+    BudgetClosedError,
+    DuplicateCategoryError,
+    NegativeAmountError,
 )
 
 
@@ -141,12 +142,12 @@ class BudgetCategory:
         if not self.name.strip():
             raise ValueError("Category name cannot be empty.")
         if self.limit < Money("0.00"):
-            raise ValueError("Category budget limit cannot be negative.")
+            raise NegativeAmountError("Category budget limit cannot be negative.")
 
     def change_limit(self, new_limit: Money) -> None:
         """Change the category limit after validating it is not negative."""
         if new_limit < Money("0.00"):
-            raise ValueError("Category budget limit cannot be negative.")
+            raise NegativeAmountError("Category budget limit cannot be negative.")
         self.limit = new_limit
 
     def __setattr__(self, name: str, value: Any) -> None:
@@ -179,7 +180,7 @@ class Transaction:
     def __post_init__(self) -> None:
         """Validate transaction parameters."""
         if self.amount <= Money("0.00"):
-            raise ValueError("Transaction amount must be positive.")
+            raise NegativeAmountError("Transaction amount must be positive.")
         if not self.category.strip():
             raise ValueError("Transaction category cannot be empty.")
 
@@ -202,7 +203,7 @@ class Budget:
         Raises DuplicateCategoryException if it already exists.
         """
         if category.name in self.categories:
-            raise DuplicateCategoryException(
+            raise DuplicateCategoryError(
                 f"Category '{category.name}' already exists in budget."
             )
         self.categories[category.name] = category
@@ -213,7 +214,7 @@ class Budget:
         Validates status, category registration, and limits.
         """
         if self.status == "CLOSED":
-            raise BudgetClosedException("Cannot add transaction to a closed budget.")
+            raise BudgetClosedError("Cannot add transaction to a closed budget.")
 
         from orcalogy.domain.validation import LimitValidator
 

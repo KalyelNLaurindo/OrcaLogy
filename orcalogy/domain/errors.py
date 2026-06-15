@@ -4,26 +4,31 @@ class DomainError(Exception):
     pass
 
 
-class BudgetClosedException(DomainError):  # noqa: N818
+class BudgetClosedError(DomainError):
     """Raised when trying to perform operations on a closed budget."""
 
     pass
 
 
-class CategoryNotFoundException(DomainError):  # noqa: N818
+class CategoryNotFoundError(DomainError):
     """Raised when a specified category does not exist in the budget."""
 
     pass
 
 
-class BudgetOverrunException(DomainError):  # noqa: N818
+class BudgetOverrunError(DomainError):
     """Raised when a transaction exceeds the budget limit of a category."""
 
     pass
 
 
-class DuplicateCategoryException(DomainError):  # noqa: N818
+class DuplicateCategoryError(DomainError):
     """Raised when a category is added to the budget but already exists."""
 
     pass
 
+
+class NegativeAmountError(DomainError, ValueError):
+    """Raised when a negative amount is provided to a value object or category."""
+
+    pass

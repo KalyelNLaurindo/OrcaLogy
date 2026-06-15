@@ -11,10 +11,10 @@ Define standard custom exceptions inside `orcalogy/domain/errors.py`. Enforces c
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain core models are established.
+* [x] Domain core models are established.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Errors]:** System throws specialized class exceptions instead of generic runtime errors.
-* [ ] **[Verification]:** Type check assertions and pytest test scenarios catch and verify errors.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Errors]:** System throws specialized class exceptions instead of generic runtime errors.
+* [x] **[Verification]:** Type check assertions and pytest test scenarios catch and verify errors.

@@ -3,10 +3,11 @@ from decimal import Decimal
 import pytest
 
 from orcalogy.domain.errors import (
-    BudgetClosedException,
-    BudgetOverrunException,
-    CategoryNotFoundException,
-    DuplicateCategoryException,
+    BudgetClosedError,
+    BudgetOverrunError,
+    CategoryNotFoundError,
+    DuplicateCategoryError,
+    NegativeAmountError,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
 from orcalogy.domain.ranking import calculate_ranking
@@ -152,7 +153,7 @@ def test_budget_category_validation() -> None:
         BudgetCategory("   ", Money("500.00"))
 
     # Invalid negative budget limit
-    with pytest.raises(ValueError):
+    with pytest.raises(NegativeAmountError):
         BudgetCategory("Leisure", Money("-10.00"))
 
     # Safe mutation of budget limit
@@ -160,7 +161,7 @@ def test_budget_category_validation() -> None:
     assert category.limit == Money("600.00")
 
     # Validate negative limit in mutation is rejected
-    with pytest.raises(ValueError):
+    with pytest.raises(NegativeAmountError):
         category.change_limit(Money("-5.00"))
 
     # Identity (name) must be constant after creation
@@ -188,7 +189,7 @@ def test_transaction_instantiation() -> None:
     assert tx.tags == ["eating-out"]
 
     # Reject negative or zero amounts
-    with pytest.raises(ValueError):
+    with pytest.raises(NegativeAmountError):
         Transaction(
             tx_id="tx-2",
             date=datetime.date(2026, 6, 15),
@@ -197,7 +198,7 @@ def test_transaction_instantiation() -> None:
             description="Refund",
         )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NegativeAmountError):
         Transaction(
             tx_id="tx-3",
             date=datetime.date(2026, 6, 15),
@@ -235,7 +236,7 @@ def test_budget_aggregate_transitions() -> None:
     assert budget.categories["Food"] == food_cat
 
     # Prevent duplicate category addition
-    with pytest.raises(DuplicateCategoryException):
+    with pytest.raises(DuplicateCategoryError):
         budget.add_category(food_cat)
 
     # Prevent transaction with unregistered category
@@ -246,7 +247,7 @@ def test_budget_aggregate_transitions() -> None:
         amount=Money("20.00"),
         description="Movie",
     )
-    with pytest.raises(CategoryNotFoundException):
+    with pytest.raises(CategoryNotFoundError):
         budget.add_transaction(tx_unregistered)
 
     # Registering transaction successfully within limits
@@ -282,7 +283,7 @@ def test_budget_aggregate_transitions() -> None:
         amount=Money("30.00"),  # 75.50 + 30.00 = 105.50 (> 100.00 limit)
         description="Dinner Out",
     )
-    with pytest.raises(BudgetOverrunException):
+    with pytest.raises(BudgetOverrunError):
         budget.add_transaction(tx_exceed, force=False)
 
     # Transaction should NOT be registered
@@ -307,7 +308,7 @@ def test_budget_aggregate_transitions() -> None:
         amount=Money("5.00"),
         description="Coffee",
     )
-    with pytest.raises(BudgetClosedException):
+    with pytest.raises(BudgetClosedError):
         budget.add_transaction(tx_closed)
 
 
@@ -325,8 +326,8 @@ def test_limit_validation_rules() -> None:
     # Check overrun for 110.00 (should be True)
     assert LimitValidator.check_overrun(budget, "Food", Money("110.00"))
 
-    # Check overrun for unregistered category (should raise CategoryNotFoundException)
-    with pytest.raises(CategoryNotFoundException):
+    # Check overrun for unregistered category (should raise CategoryNotFoundError)
+    with pytest.raises(CategoryNotFoundError):
         LimitValidator.check_overrun(budget, "Leisure", Money("10.00"))
 
     # Register tx of 80.00
@@ -349,8 +350,8 @@ def test_limit_validation_rules() -> None:
         amount=Money("30.00"),
         description="Restaurant",
     )
-    # should raise BudgetOverrunException when force=False
-    with pytest.raises(BudgetOverrunException):
+    # should raise BudgetOverrunError when force=False
+    with pytest.raises(BudgetOverrunError):
         LimitValidator.validate_transaction(budget, tx2, force=False)
 
     # should pass when force=True
