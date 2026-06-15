@@ -11,11 +11,11 @@ Implement `Money` value object in `orcalogy/domain/models.py`. Implements immuta
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain folders are created.
-* [ ] Strict typing packages are configured.
+* [x] Domain folders are created.
+* [x] Strict typing packages are configured.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Operations]:** `Money` instances support operations like `Money('10.50') + Money('5.00') == Money('15.50')`.
-* [ ] **[Verification - Domain Validation]:** All assertions pass under `pytest tests/test_domain.py::test_money_arithmetic`.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Operations]:** `Money` instances support operations like `Money('10.50') + Money('5.00') == Money('15.50')`.
+* [x] **[Verification - Domain Validation]:** All assertions pass under `pytest tests/test_domain.py::test_money_arithmetic`.
