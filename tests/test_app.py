@@ -233,3 +233,43 @@ def test_close_budget_cycle_blocks_further_transactions() -> None:
 
     with pytest.raises(BudgetClosedError):
         register_usecase.execute(tx)
+
+
+def test_initialize_budget_structures_success() -> None:
+    """Verify that InitializeBudgetUseCase sets up limits and maps categories."""
+    from orcalogy.app.services import InitializeBudgetUseCase
+    from orcalogy.domain.models import Money
+
+    repo = FakeLedgerRepository()
+    use_case = InitializeBudgetUseCase(repository=repo)
+
+    limits = {
+        "Food": Money("500.00"),
+        "Transport": Money("150.00"),
+    }
+    use_case.execute("2026-06", limits)
+
+    saved_budget = repo.get_budget("2026-06")
+    assert saved_budget is not None
+    assert saved_budget.month == "2026-06"
+    assert saved_budget.status == "ACTIVE"
+    assert len(saved_budget.categories) == 2
+    assert saved_budget.categories["Food"].limit == Money("500.00")
+    assert saved_budget.categories["Transport"].limit == Money("150.00")
+
+
+def test_initialize_budget_structures_already_exists() -> None:
+    """Verify that InitializeBudgetUseCase raises ValueError
+
+    if budget already exists.
+    """
+    from orcalogy.app.services import InitializeBudgetUseCase
+    from orcalogy.domain.models import Money
+
+    repo = FakeLedgerRepository()
+    budget = Budget(month="2026-06")
+    repo.save_budget(budget)
+
+    use_case = InitializeBudgetUseCase(repository=repo)
+    with pytest.raises(ValueError):
+        use_case.execute("2026-06", {"Food": Money("100.00")})

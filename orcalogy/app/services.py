@@ -1,3 +1,5 @@
+from typing import Any
+
 from orcalogy.domain.errors import BudgetNotFoundError
 from orcalogy.domain.models import Transaction
 from orcalogy.domain.ports import ILedgerRepository
@@ -93,4 +95,37 @@ class CloseBudgetCycleUseCase:
             raise BudgetNotFoundError(f"Budget for month {month} was not found.")
 
         budget.close_cycle()
+        self.repository.save_budget(budget)
+
+
+class InitializeBudgetUseCase:
+    """Use case to initialize a monthly budget and setup category limits.
+
+    Ensures no duplicate budget is created for the same period.
+    """
+
+    def __init__(self, repository: ILedgerRepository) -> None:
+        self.repository = repository
+
+    def execute(self, month: str, category_limits: dict[str, Any]) -> None:
+        """Execute the use case to initialize the budget.
+
+        Args:
+            month: Period format YYYY-MM (e.g. '2026-06').
+            category_limits: Mapping of category names to Money limit values.
+
+        Raises:
+            ValueError: If a budget for the specified month already exists.
+        """
+        from orcalogy.domain.models import Budget, BudgetCategory
+
+        existing = self.repository.get_budget(month)
+        if existing is not None:
+            raise ValueError(f"Budget for month {month} already exists.")
+
+        budget = Budget(month=month)
+        for name, limit in category_limits.items():
+            category = BudgetCategory(name=name, limit=limit)
+            budget.add_category(category)
+
         self.repository.save_budget(budget)

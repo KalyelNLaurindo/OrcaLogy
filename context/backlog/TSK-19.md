@@ -11,10 +11,10 @@ Implement initializer service inside `orcalogy/app/services.py`. Creates default
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] ILedgerRepository Port interface initialized.
+* [x] ILedgerRepository Port interface initialized.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Init]:** Sets up directories and maps limits on clean ledger startups.
-* [ ] **[Verification]:** Running tests in `tests/test_app.py::test_initialize_budget_structures` runs green.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Init]:** Sets up directories and maps limits on clean ledger startups.
+* [x] **[Verification]:** Running tests in `tests/test_app.py::test_initialize_budget_structures` runs green.
