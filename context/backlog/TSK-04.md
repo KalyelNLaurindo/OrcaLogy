@@ -16,5 +16,5 @@ Configure dependencies inside `pyproject.toml` or `requirements.txt`. Required p
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Functional - Dependencies]:** Dependencies defined inside project descriptors.
-* [ ] **[Verification - Installation]:** Run `poetry install` or `pip install -r requirements.txt` running to completion without errors.
+* [x] **[Functional - Dependencies]:** Dependencies defined inside project descriptors.
+* [x] **[Verification - Installation]:** Run `poetry install` or `pip install -r requirements.txt` running to completion without errors.

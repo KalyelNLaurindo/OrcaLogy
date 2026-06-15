@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "orcalogy"
+version = "0.1.0"
+description = "Local-first, deterministic Python budget management engine"
+authors = ["Kalyel N. Laurindo / Software Engineer"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "orcalogy"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = "^0.12.3"
+textual = "^0.68.0"
+filelock = "^3.14.0"
+tomli-w = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+pytest-cov = "^5.0.0"
+ruff = "^0.4.4"
+mypy = "^1.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+orca = "orcalogy.main:app"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --cov=orcalogy --cov-report=term-missing"
+testpaths = [
+    "tests",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "ARG", "PTH", "RUF"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "filelock.*"
+ignore_missing_imports = true

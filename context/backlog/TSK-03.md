@@ -16,5 +16,5 @@ Create `CLAUDE.md` in repository root declaring development parameters, executio
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Functional - Context]:** `CLAUDE.md` is present in root directory.
-* [ ] **[Verification - Git]:** Run `git log` showing the first commit matching conventional guidelines.
+* [x] **[Functional - Context]:** `CLAUDE.md` is present in root directory.
+* [x] **[Verification - Git]:** Run `git log` showing the first commit matching conventional guidelines.

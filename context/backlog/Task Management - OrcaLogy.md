@@ -53,25 +53,25 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* Phase 1.1 / ARCH-ENABLER  
   * *Estimation/Priority:* P0 / Reach: 100, Impact: 3, Confidence: 1.0, Effort: 1 (RICE: 300)  
   * *TDD Test File:* None (Documentation Setup)  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-04](TSK-04.md)]: Configure Dependencies in pyproject.toml**  
   * *Epic/Requirement Link:* Phase 1.1 / ARCH-ENABLER  
   * *Estimation/Priority:* P0 / Reach: 100, Impact: 3, Confidence: 1.0, Effort: 1 (RICE: 300)  
   * *TDD Test File:* None (Dep Config)  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-05](TSK-05.md)]: Scaffold Directory Structure**  
   * *Epic/Requirement Link:* Phase 1.1 / ARCH-ENABLER  
   * *Estimation/Priority:* P0 / Reach: 100, Impact: 3, Confidence: 1.0, Effort: 1 (RICE: 300)  
   * *TDD Test File:* None (Scaffolding)  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-06](TSK-06.md)]: Config Parser for config.toml**  
   * *Epic/Requirement Link:* RF01 / ARCH-ENABLER  
   * *Estimation/Priority:* P0 / Reach: 80, Impact: 2, Confidence: 0.8, Effort: 1 (RICE: 128)  
   * *TDD Test File:* `tests/test_infra.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 ### **⚙️ Backlog Phase 2: Bounded Domain Context & Core Models**
 
@@ -263,10 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-03](TSK-03.md)]:** Create CLAUDE.md & Initial Commit
-* [ ] **[[TSK-04](TSK-04.md)]:** Configure Dependencies in pyproject.toml
-* [ ] **[[TSK-05](TSK-05.md)]:** Scaffold Directory Structure
-* [ ] **[[TSK-06](TSK-06.md)]:** Config Parser for config.toml
 * [ ] **[[TSK-07](TSK-07.md)]:** Implement Money Value Object
 * [ ] **[[TSK-08](TSK-08.md)]:** Implement BudgetCategory Entity
 * [ ] **[[TSK-09](TSK-09.md)]:** Implement Budget Aggregate Root
@@ -309,3 +305,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 * [x] **[[TSK-01](TSK-01.md)]:** Setup Python Environment & Poetry
 * [x] **[[TSK-02](TSK-02.md)]:** Git Repository Initialization & Config
+* [x] **[[TSK-03](TSK-03.md)]:** Create CLAUDE.md & Initial Commit
+* [x] **[[TSK-04](TSK-04.md)]:** Configure Dependencies in pyproject.toml
+* [x] **[[TSK-05](TSK-05.md)]:** Scaffold Directory Structure
+* [x] **[[TSK-06](TSK-06.md)]:** Config Parser for config.toml

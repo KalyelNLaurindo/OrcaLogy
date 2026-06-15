@@ -11,9 +11,9 @@ Scaffold module folder structures matching clean Hexagonal DDD boundaries: `orca
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Environment configuration packages setup completed (TSK-04 complete).
+* [x] Environment configuration packages setup completed (TSK-04 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Functional - Architecture]:** Directory paths are set up.
-* [ ] **[Verification - Imports]:** Run `python -c "import orcalogy.domain, orcalogy.app, orcalogy.infra, orcalogy.cli, orcalogy.tui"` showing zero import exceptions.
+* [x] **[Functional - Scaffolding]:** All directories specified in the structure layout are created and contain `__init__.py` files.
+* [x] **[Verification - Imports]:** Run `python -c "import orcalogy.domain, orcalogy.app, orcalogy.infra, orcalogy.cli, orcalogy.tui"` showing zero import exceptions.

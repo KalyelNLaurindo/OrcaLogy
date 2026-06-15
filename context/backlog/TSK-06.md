@@ -16,6 +16,6 @@ Implement config loader to parse `config.toml` mappings. Extracts general config
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Parser]:** Successfully parses a sample `config.toml` structure.
-* [ ] **[Verification - Tests]:** Running `pytest tests/test_infra.py` matches assertions on categories retrieval.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Parser]:** Successfully parses a sample `config.toml` structure.
+* [x] **[Verification - Tests]:** Running `pytest tests/test_infra.py` matches assertions on categories retrieval.
