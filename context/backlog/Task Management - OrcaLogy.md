@@ -161,7 +161,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF02 / PERSISTENCE  
   * *Estimation/Priority:* P0 / Reach: 90, Impact: 3, Confidence: 0.8, Effort: 2 (RICE: 108)  
   * *TDD Test File:* `tests/test_infra.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-21](TSK-21.md)]: Lexical Flat-Text Journal Parser**  
   * *Epic/Requirement Link:* RF01 / PERSISTENCE  
@@ -263,7 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-20](TSK-20.md)]:** Concurrency Advisory File Locker
 * [ ] **[[TSK-21](TSK-21.md)]:** Lexical Flat-Text Journal Parser
 * [ ] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer
 * [ ] **[[TSK-23](TSK-23.md)]:** Setup Typer CLI Controller & Commands
@@ -309,6 +308,7 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-17](TSK-17.md)]:** Implement Get Category Deviation Ranking Use Case
 * [x] **[[TSK-18](TSK-18.md)]:** Implement Close Fiscal Cycle Use Case
 * [x] **[[TSK-19](TSK-19.md)]:** Implement Initialize Budget & Limits Use Case
+* [x] **[[TSK-20](TSK-20.md)]:** Concurrency Advisory File Locker
 
 
 

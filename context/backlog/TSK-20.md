@@ -11,10 +11,10 @@ Implement multi-process advisory lock wrapper in `orcalogy/infra/locker.py` usin
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] filelock package is installed in Poetry environment (TSK-04 complete).
+* [x] filelock package is installed in Poetry environment (TSK-04 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Concurrency]:** Prevents overlapping file modifications.
-* [ ] **[Verification - Multi-process]:** Tests in `tests/test_infra.py::test_advisory_file_locking` spawn concurrent tasks confirming queuing order.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Concurrency]:** Prevents overlapping file modifications.
+* [x] **[Verification - Multi-process]:** Tests in `tests/test_infra.py::test_advisory_file_locking` spawn concurrent tasks confirming queuing order.
