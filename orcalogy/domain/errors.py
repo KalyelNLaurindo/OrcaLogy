@@ -32,3 +32,9 @@ class NegativeAmountError(DomainError, ValueError):
     """Raised when a negative amount is provided to a value object or category."""
 
     pass
+
+
+class BudgetNotFoundError(DomainError):
+    """Raised when a budget cannot be found in the repository."""
+
+    pass

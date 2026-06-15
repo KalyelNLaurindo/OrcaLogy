@@ -135,7 +135,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / RF03 / Core Use Cases  
   * *Estimation/Priority:* P1 / Reach: 80, Impact: 3, Confidence: 0.8, Effort: 2 (RICE: 96)  
   * *TDD Test File:* `tests/test_app.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-17](TSK-17.md)]: Implement Get Category Deviation Ranking Use Case**  
   * *Epic/Requirement Link:* RF03 / Core Use Cases  
@@ -263,7 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-16](TSK-16.md)]:** Implement Register Transaction Use Case
 * [ ] **[[TSK-17](TSK-17.md)]:** Implement Get Category Deviation Ranking Use Case
 * [ ] **[[TSK-18](TSK-18.md)]:** Implement Close Fiscal Cycle Use Case
 * [ ] **[[TSK-19](TSK-19.md)]:** Implement Initialize Budget & Limits Use Case
@@ -309,6 +308,7 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-13](TSK-13.md)]:** Define Domain Exceptions & Errors
 * [x] **[[TSK-14](TSK-14.md)]:** Define ILedgerRepository Interface Protocol
 * [x] **[[TSK-15](TSK-15.md)]:** Create bootstrap.py DI Container
+* [x] **[[TSK-16](TSK-16.md)]:** Implement Register Transaction Use Case
 
 
 
