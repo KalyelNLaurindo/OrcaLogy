@@ -11,10 +11,10 @@ Implement `orcalogy/bootstrap.py` bootstrapping service configurations. Register
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] ILedgerRepository Port interface is defined (TSK-14 complete).
+* [x] ILedgerRepository Port interface is defined (TSK-14 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - DI]:** Bootstrapper binds interfaces dynamically.
-* [ ] **[Verification]:** `pytest tests/test_app.py::test_bootstrap_resolver` returns green resolving mock dependencies.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - DI]:** Bootstrapper binds interfaces dynamically.
+* [x] **[Verification]:** `pytest tests/test_app.py::test_bootstrap_resolver` returns green resolving mock dependencies.
