@@ -11,10 +11,10 @@ Implement deviation calculations inside `orcalogy/domain/ranking.py`. Computes p
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain entities and validation logic are active.
+* [x] Domain entities and validation logic are active.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Math]:** Returns sorted category ranking where overspent items top the list.
-* [ ] **[Verification]:** `pytest tests/test_domain.py::test_ranking_calculations` runs green.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Math]:** Returns sorted category ranking where overspent items top the list.
+* [x] **[Verification]:** `pytest tests/test_domain.py::test_ranking_calculations` runs green.

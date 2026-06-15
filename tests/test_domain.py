@@ -9,6 +9,7 @@ from orcalogy.domain.errors import (
     DuplicateCategoryException,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+from orcalogy.domain.ranking import calculate_ranking
 from orcalogy.domain.validation import LimitValidator
 
 
@@ -354,6 +355,89 @@ def test_limit_validation_rules() -> None:
 
     # should pass when force=True
     LimitValidator.validate_transaction(budget, tx2, force=True)
+
+
+def test_ranking_calculations() -> None:
+    """Verify deviation math, zero-limit handling, and ranking order."""
+    import datetime
+
+    budget = Budget(month="2026-06")
+
+    # Categories
+    cat1 = BudgetCategory("Food", Money("100.00"))  # Limit 100.00
+    cat2 = BudgetCategory("Leisure", Money("200.00"))  # Limit 200.00
+    cat3 = BudgetCategory("Transport", Money("50.00"))  # Limit 50.00
+    cat4 = BudgetCategory("ZeroLimitSpend", Money("0.00"))  # Limit 0.00
+    cat5 = BudgetCategory("ZeroLimitNoSpend", Money("0.00"))  # Limit 0.00
+
+    budget.add_category(cat1)
+    budget.add_category(cat2)
+    budget.add_category(cat3)
+    budget.add_category(cat4)
+    budget.add_category(cat5)
+
+    # Transactions
+    # Food spent 120.00 -> deviation: ((120/100) - 1) * 100 = +20.00%
+    tx_food = Transaction(
+        "tx-f",
+        datetime.date(2026, 6, 15),
+        "Food",
+        Money("120.00"),
+        "Groceries",
+    )
+    budget.add_transaction(tx_food, force=True)
+
+    # Leisure spent 150.00 -> deviation: ((150/200) - 1) * 100 = -25.00%
+    tx_leisure = Transaction(
+        "tx-l", datetime.date(2026, 6, 15), "Leisure", Money("150.00"), "Game"
+    )
+    budget.add_transaction(tx_leisure, force=True)
+
+    # Transport spent 10.00 -> deviation: ((10/50) - 1) * 100 = -80.00%
+    tx_transport = Transaction(
+        "tx-t", datetime.date(2026, 6, 15), "Transport", Money("10.00"), "Bus"
+    )
+    budget.add_transaction(tx_transport, force=True)
+
+    # ZeroLimitSpend spent 50.00 -> deviation limit 0, spent > 0 -> +100.00%
+    tx_zero = Transaction(
+        "tx-z",
+        datetime.date(2026, 6, 15),
+        "ZeroLimitSpend",
+        Money("50.00"),
+        "Extra",
+    )
+    budget.add_transaction(tx_zero, force=True)
+
+    # ZeroLimitNoSpend -> spent 0.00 -> deviation: limit 0, spent 0 -> 0.00%
+
+
+    # Calculate ranking
+    ranking = calculate_ranking(budget)
+
+    # Ordered descending:
+    # 1. ZeroLimitSpend (+100.00%)
+    # 2. Food (+20.00%)
+    # 3. ZeroLimitNoSpend (0.00%)
+    # 4. Leisure (-25.00%)
+    # 5. Transport (-80.00%)
+    assert len(ranking) == 5
+
+    assert ranking[0].category_name == "ZeroLimitSpend"
+    assert ranking[0].deviation == Decimal("100.00")
+
+    assert ranking[1].category_name == "Food"
+    assert ranking[1].deviation == Decimal("20.00")
+
+    assert ranking[2].category_name == "ZeroLimitNoSpend"
+    assert ranking[2].deviation == Decimal("0.00")
+
+    assert ranking[3].category_name == "Leisure"
+    assert ranking[3].deviation == Decimal("-25.00")
+
+    assert ranking[4].category_name == "Transport"
+    assert ranking[4].deviation == Decimal("-80.00")
+
 
 
 
