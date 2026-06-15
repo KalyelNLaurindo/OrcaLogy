@@ -1,6 +1,7 @@
 from orcalogy.domain.errors import BudgetNotFoundError
 from orcalogy.domain.models import Transaction
 from orcalogy.domain.ports import ILedgerRepository
+from orcalogy.domain.ranking import CategoryRankingItem, calculate_ranking
 
 
 class RegisterTransactionUseCase:
@@ -39,3 +40,31 @@ class RegisterTransactionUseCase:
 
         # Atomic persistence check
         self.repository.save_budget(budget)
+
+
+class GetCategoryDeviationRankingUseCase:
+    """Use case to retrieve sorted category deviation ranking for a month.
+
+    Handles budget existence checks and delegation to domain ranking math.
+    """
+
+    def __init__(self, repository: ILedgerRepository) -> None:
+        self.repository = repository
+
+    def execute(self, month: str) -> list[CategoryRankingItem]:
+        """Execute the use case to retrieve the ranking list.
+
+        Args:
+            month: Period format YYYY-MM (e.g. '2026-06').
+
+        Returns:
+            A list of CategoryRankingItem objects sorted descending.
+
+        Raises:
+            BudgetNotFoundError: If the budget for the period does not exist.
+        """
+        budget = self.repository.get_budget(month)
+        if budget is None:
+            raise BudgetNotFoundError(f"Budget for month {month} was not found.")
+
+        return calculate_ranking(budget)

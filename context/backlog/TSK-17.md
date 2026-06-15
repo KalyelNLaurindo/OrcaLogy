@@ -11,10 +11,10 @@ Implement category deviation retriever service in `orcalogy/app/services.py`. Fe
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain ranking utility completed.
+* [x] Domain ranking utility completed.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Reporting]:** Use case returns sorted data models containing exact percentage deviation structures.
-* [ ] **[Verification]:** Tests in `tests/test_app.py::test_get_ranking_usecase` assert correct calculations.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Reporting]:** Use case returns sorted data models containing exact percentage deviation structures.
+* [x] **[Verification]:** Tests in `tests/test_app.py::test_get_ranking_usecase` assert correct calculations.

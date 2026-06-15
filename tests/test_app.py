@@ -116,3 +116,56 @@ def test_register_transaction_usecase_overrun() -> None:
     saved_budget = repo.get_budget("2026-06")
     assert saved_budget is not None
     assert saved_budget.get_category_spending("Food") == Money("60.00")
+
+
+def test_get_ranking_usecase_success() -> None:
+    """Verify that GetCategoryDeviationRankingUseCase retrieves and sorts deviations."""
+    import datetime
+    from decimal import Decimal
+
+    from orcalogy.app.services import GetCategoryDeviationRankingUseCase
+    from orcalogy.domain.models import BudgetCategory, Money, Transaction
+
+    repo = FakeLedgerRepository()
+    budget = Budget(month="2026-06")
+    budget.add_category(BudgetCategory("Food", Money("100.00")))
+    budget.add_category(BudgetCategory("Leisure", Money("200.00")))
+
+    # Food spent 120.00 (+20%)
+    budget.add_transaction(
+        Transaction(
+            "tx-f", datetime.date(2026, 6, 15), "Food", Money("120.00"), "Groceries"
+        ),
+        force=True,
+    )
+    # Leisure spent 100.00 (-50%)
+    budget.add_transaction(
+        Transaction(
+            "tx-l", datetime.date(2026, 6, 15), "Leisure", Money("100.00"), "Gaming"
+        )
+    )
+    repo.save_budget(budget)
+
+    use_case = GetCategoryDeviationRankingUseCase(repository=repo)
+    ranking = use_case.execute("2026-06")
+
+    assert len(ranking) == 2
+    assert ranking[0].category_name == "Food"
+    assert ranking[0].deviation == Decimal("20.00")
+    assert ranking[1].category_name == "Leisure"
+    assert ranking[1].deviation == Decimal("-50.00")
+
+
+def test_get_ranking_usecase_not_found() -> None:
+    """Verify that GetCategoryDeviationRankingUseCase raises BudgetNotFoundError
+
+    for non-existing period.
+    """
+    from orcalogy.app.services import GetCategoryDeviationRankingUseCase
+    from orcalogy.domain.errors import BudgetNotFoundError
+
+    repo = FakeLedgerRepository()
+    use_case = GetCategoryDeviationRankingUseCase(repository=repo)
+
+    with pytest.raises(BudgetNotFoundError):
+        use_case.execute("2026-06")
