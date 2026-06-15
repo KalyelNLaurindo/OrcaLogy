@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from orcalogy.domain.models import Money
+from orcalogy.domain.models import BudgetCategory, Money
 
 
 def test_money_initialization() -> None:
@@ -127,3 +127,35 @@ def test_money_string_representation() -> None:
     m = Money("10.50")
     assert str(m) == "$10.50"
     assert repr(m) == "Money('10.50')"
+
+
+def test_budget_category_validation() -> None:
+    """Verify BudgetCategory validation, identity preservation, and mutation."""
+    # Valid creation
+    category = BudgetCategory("Food", Money("500.00"))
+    assert category.name == "Food"
+    assert category.limit == Money("500.00")
+
+    # Invalid empty or whitespace name
+    with pytest.raises(ValueError):
+        BudgetCategory("", Money("500.00"))
+
+    with pytest.raises(ValueError):
+        BudgetCategory("   ", Money("500.00"))
+
+    # Invalid negative budget limit
+    with pytest.raises(ValueError):
+        BudgetCategory("Leisure", Money("-10.00"))
+
+    # Safe mutation of budget limit
+    category.change_limit(Money("600.00"))
+    assert category.limit == Money("600.00")
+
+    # Validate negative limit in mutation is rejected
+    with pytest.raises(ValueError):
+        category.change_limit(Money("-5.00"))
+
+    # Identity (name) must be constant after creation
+    with pytest.raises(AttributeError):
+        category.name = "Leisure"  # type: ignore
+

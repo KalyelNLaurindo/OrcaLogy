@@ -85,7 +85,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / Core Domain  
   * *Estimation/Priority:* P1 / Reach: 85, Impact: 2, Confidence: 0.8, Effort: 1 (RICE: 136)  
   * *TDD Test File:* `tests/test_domain.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-09](TSK-09.md)]: Implement Budget Aggregate Root**  
   * *Epic/Requirement Link:* RF01 / Core Domain  
@@ -263,7 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-08](TSK-08.md)]:** Implement BudgetCategory Entity
 * [ ] **[[TSK-09](TSK-09.md)]:** Implement Budget Aggregate Root
 * [ ] **[[TSK-10](TSK-10.md)]:** Implement Transaction Entity
 * [ ] **[[TSK-11](TSK-11.md)]:** Implement Domain Validation Service
@@ -309,4 +308,5 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-05](TSK-05.md)]:** Scaffold Directory Structure
 * [x] **[[TSK-06](TSK-06.md)]:** Config Parser for config.toml
 * [x] **[[TSK-07](TSK-07.md)]:** Implement Money Value Object
+* [x] **[[TSK-08](TSK-08.md)]:** Implement BudgetCategory Entity
 

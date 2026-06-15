@@ -118,3 +118,34 @@ class Money:
     def __repr__(self) -> str:
         """Return the developer-friendly string representation of Money."""
         return f"Money('{self.amount}')"
+
+
+@dataclass
+class BudgetCategory:
+    """An entity representing a budget category with a unique name and a limit.
+
+    The identity (name) remains constant after creation, while the limit is mutable.
+    """
+
+    name: str
+    limit: Money
+
+    def __post_init__(self) -> None:
+        """Validate category fields after initialization."""
+        if not self.name.strip():
+            raise ValueError("Category name cannot be empty.")
+        if self.limit < Money("0.00"):
+            raise ValueError("Category budget limit cannot be negative.")
+
+    def change_limit(self, new_limit: Money) -> None:
+        """Change the category limit after validating it is not negative."""
+        if new_limit < Money("0.00"):
+            raise ValueError("Category budget limit cannot be negative.")
+        self.limit = new_limit
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Enforce immutable identity for the 'name' attribute."""
+        if name == "name" and hasattr(self, "name"):
+            raise AttributeError("Cannot modify the name/identity of a BudgetCategory.")
+        super().__setattr__(name, value)
+

@@ -11,10 +11,10 @@ Implement `BudgetCategory` entity in `orcalogy/domain/models.py`. Holds metadata
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Money value object is active (TSK-07 complete).
+* [x] Money value object is active (TSK-07 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Entity]:** `BudgetCategory` validates limit is greater than or equal to zero.
-* [ ] **[Verification - Tests]:** `pytest tests/test_domain.py::test_budget_category_validation` runs successfully.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Entity]:** `BudgetCategory` validates limit is greater than or equal to zero.
+* [x] **[Verification - Tests]:** `pytest tests/test_domain.py::test_budget_category_validation` runs successfully.
