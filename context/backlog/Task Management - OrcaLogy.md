@@ -257,6 +257,38 @@ The backlog is structured sequentially based on the active phases defined in the
   * *TDD Test File:* None  
   * *Status:* To Do  
 
+### **🚀 Backlog Phase 7: Advanced Features & Extensions**
+
+* **[[TSK-36](TSK-36.md)]: CSV Import/Export Engine**  
+  * *Epic/Requirement Link:* Phase 7.1 / PORTABILITY  
+  * *Estimation/Priority:* P2 / Reach: 80, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 64)  
+  * *TDD Test File:* `tests/test_infra.py`  
+  * *Status:* To Do  
+
+* **[[TSK-37](TSK-37.md)]: Secure Cryptographic Ledger**  
+  * *Epic/Requirement Link:* Phase 7.2 / SECURITY  
+  * *Estimation/Priority:* P1 / Reach: 80, Impact: 3, Confidence: 0.8, Effort: 3 (RICE: 64)  
+  * *TDD Test File:* `tests/test_infra.py`  
+  * *Status:* To Do  
+
+* **[[TSK-38](TSK-38.md)]: Git Cloud Backup & Auto-Sync**  
+  * *Epic/Requirement Link:* Phase 7.3 / SYNC  
+  * *Estimation/Priority:* P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 60)  
+  * *TDD Test File:* `tests/test_infra.py`  
+  * *Status:* To Do  
+
+* **[[TSK-39](TSK-39.md)]: Tag-based Analytics & Reporting**  
+  * *Epic/Requirement Link:* Phase 7.4 / ANALYTICS  
+  * *Estimation/Priority:* P2 / Reach: 80, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 64)  
+  * *TDD Test File:* `tests/test_domain.py`  
+  * *Status:* To Do  
+
+* **[[TSK-40](TSK-40.md)]: Multi-Format Report Exporter**  
+  * *Epic/Requirement Link:* Phase 7.5 / PORTABILITY  
+  * *Estimation/Priority:* P2 / Reach: 80, Impact: 2, Confidence: 0.8, Effort: 1 (RICE: 128)  
+  * *TDD Test File:* `tests/test_infra.py`  
+  * *Status:* To Do  
+
 ---
 
 ## **3. 📋 Basic Markdown Kanban Board**
@@ -278,6 +310,11 @@ The backlog is structured sequentially based on the active phases defined in the
 * [ ] **[[TSK-33](TSK-33.md)]:** Create MIT License File
 * [ ] **[[TSK-34](TSK-34.md)]:** Configure GitHub Actions CI Pipeline
 * [ ] **[[TSK-35](TSK-35.md)]:** Compile Final README.md Documentation
+* [ ] **[[TSK-36](TSK-36.md)]:** CSV Import/Export Engine
+* [ ] **[[TSK-37](TSK-37.md)]:** Secure Cryptographic Ledger
+* [ ] **[[TSK-38](TSK-38.md)]:** Git Cloud Backup & Auto-Sync
+* [ ] **[[TSK-39](TSK-39.md)]:** Tag-based Analytics & Reporting
+* [ ] **[[TSK-40](TSK-40.md)]:** Multi-Format Report Exporter
 
 ### **🟡 In Progress (Actively Being Built)**
 
