@@ -11,10 +11,10 @@ Implement `Budget` aggregate root inside `orcalogy/domain/models.py`. Coordinate
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] BudgetCategory entity is verified and tested (TSK-08 complete).
+* [x] BudgetCategory entity is verified and tested (TSK-08 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Aggregate]:** Budget enforces status shifts and updates total spending balances correctly.
-* [ ] **[Verification - Domain]:** `pytest tests/test_domain.py::test_budget_aggregate_transitions` runs green.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Aggregate]:** Budget enforces status shifts and updates total spending balances correctly.
+* [x] **[Verification - Domain]:** `pytest tests/test_domain.py::test_budget_aggregate_transitions` runs green.

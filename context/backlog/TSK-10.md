@@ -11,10 +11,10 @@ Implement `Transaction` domain entity in `orcalogy/domain/models.py`. Standard p
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Money value object completed (TSK-07 complete).
+* [x] Money value object completed (TSK-07 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Entity]:** Transaction instances correctly format properties and prevent negative amount registrations.
-* [ ] **[Verification]:** Tests in `tests/test_domain.py::test_transaction_instantiation` assert constraints pass.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Entity]:** Transaction instances correctly format properties and prevent negative amount registrations.
+* [x] **[Verification]:** Tests in `tests/test_domain.py::test_transaction_instantiation` assert constraints pass.

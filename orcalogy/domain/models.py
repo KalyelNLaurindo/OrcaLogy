@@ -1,8 +1,16 @@
+import datetime
 import decimal
 import functools
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any, Union
+
+from orcalogy.domain.errors import (
+    BudgetClosedException,
+    BudgetOverrunException,
+    CategoryNotFoundException,
+    DuplicateCategoryException,
+)
 
 
 @dataclass(frozen=True)
@@ -148,4 +156,100 @@ class BudgetCategory:
         if name == "name" and hasattr(self, "name"):
             raise AttributeError("Cannot modify the name/identity of a BudgetCategory.")
         super().__setattr__(name, value)
+
+
+@dataclass(frozen=True)
+class Transaction:
+    """A domain entity representing an expense or income transaction.
+
+    Attributes:
+        tx_id: A unique identifier.
+        date: The date of the transaction.
+        category: The budget category name.
+        amount: The transaction value.
+        description: A text description.
+        tags: List of tags for categorization.
+    """
+
+    tx_id: str
+    date: datetime.date
+    category: str
+    amount: Money
+    description: str
+    tags: list[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        """Validate transaction parameters."""
+        if self.amount <= Money("0.00"):
+            raise ValueError("Transaction amount must be positive.")
+        if not self.category.strip():
+            raise ValueError("Transaction category cannot be empty.")
+
+
+@dataclass
+class Budget:
+    """An aggregate root representing a monthly budget.
+
+    Coordinates categories and transactions, and manages active status lifecycle.
+    """
+
+    month: str
+    categories: dict[str, BudgetCategory] = field(default_factory=dict)
+    transactions: list[Transaction] = field(default_factory=list)
+    status: str = "ACTIVE"
+
+    def add_category(self, category: BudgetCategory) -> None:
+        """Add a category to the budget.
+
+        Raises DuplicateCategoryException if it already exists.
+        """
+        if category.name in self.categories:
+            raise DuplicateCategoryException(
+                f"Category '{category.name}' already exists in budget."
+            )
+        self.categories[category.name] = category
+
+    def add_transaction(self, transaction: Transaction, force: bool = False) -> None:
+        """Register a transaction.
+
+        Validates status, category registration, and limits.
+        """
+        if self.status == "CLOSED":
+            raise BudgetClosedException("Cannot add transaction to a closed budget.")
+
+        if transaction.category not in self.categories:
+            raise CategoryNotFoundException(
+                f"Category '{transaction.category}' is not registered."
+            )
+
+        category = self.categories[transaction.category]
+        current_spending = self.get_category_spending(transaction.category)
+        new_total = current_spending + transaction.amount
+
+        if new_total > category.limit and not force:
+            raise BudgetOverrunException(
+                f"Transaction exceeds '{category.name}' limit of {category.limit}."
+            )
+
+        self.transactions.append(transaction)
+
+    def get_category_spending(self, category_name: str) -> Money:
+        """Calculate total spending for a specific category."""
+        category_txs = [tx for tx in self.transactions if tx.category == category_name]
+        total = Money("0.00")
+        for tx in category_txs:
+            total += tx.amount
+        return total
+
+    def get_total_spending(self) -> Money:
+        """Calculate total spending across all registered transactions."""
+        total = Money("0.00")
+        for tx in self.transactions:
+            total += tx.amount
+        return total
+
+    def close_cycle(self) -> None:
+        """Close the fiscal cycle for this budget."""
+        self.status = "CLOSED"
+
 

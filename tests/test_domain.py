@@ -2,7 +2,13 @@ from decimal import Decimal
 
 import pytest
 
-from orcalogy.domain.models import BudgetCategory, Money
+from orcalogy.domain.errors import (
+    BudgetClosedException,
+    BudgetOverrunException,
+    CategoryNotFoundException,
+    DuplicateCategoryException,
+)
+from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
 
 
 def test_money_initialization() -> None:
@@ -158,4 +164,148 @@ def test_budget_category_validation() -> None:
     # Identity (name) must be constant after creation
     with pytest.raises(AttributeError):
         category.name = "Leisure"  # type: ignore
+
+
+def test_transaction_instantiation() -> None:
+    """Verify Transaction properties and validation constraints."""
+    import datetime
+
+    # Valid instantiation
+    tx = Transaction(
+        tx_id="tx-1",
+        date=datetime.date(2026, 6, 15),
+        category="Food",
+        amount=Money("15.50"),
+        description="Lunch at Diner",
+        tags=["eating-out"],
+    )
+    assert tx.tx_id == "tx-1"
+    assert tx.category == "Food"
+    assert tx.amount == Money("15.50")
+    assert tx.description == "Lunch at Diner"
+    assert tx.tags == ["eating-out"]
+
+    # Reject negative or zero amounts
+    with pytest.raises(ValueError):
+        Transaction(
+            tx_id="tx-2",
+            date=datetime.date(2026, 6, 15),
+            category="Food",
+            amount=Money("-5.00"),
+            description="Refund",
+        )
+
+    with pytest.raises(ValueError):
+        Transaction(
+            tx_id="tx-3",
+            date=datetime.date(2026, 6, 15),
+            category="Food",
+            amount=Money("0.00"),
+            description="Freebie",
+        )
+
+    # Reject empty or whitespace category names
+    with pytest.raises(ValueError):
+        Transaction(
+            tx_id="tx-4",
+            date=datetime.date(2026, 6, 15),
+            category="   ",
+            amount=Money("10.00"),
+            description="Empty Category",
+        )
+
+
+
+def test_budget_aggregate_transitions() -> None:
+    """Verify Budget aggregate transitions, calculations, and constraints."""
+    import datetime
+
+    # Budget initialization
+    budget = Budget(month="2026-06")
+    assert budget.month == "2026-06"
+    assert budget.status == "ACTIVE"
+    assert len(budget.categories) == 0
+    assert len(budget.transactions) == 0
+
+    # Adding a category
+    food_cat = BudgetCategory("Food", Money("100.00"))
+    budget.add_category(food_cat)
+    assert budget.categories["Food"] == food_cat
+
+    # Prevent duplicate category addition
+    with pytest.raises(DuplicateCategoryException):
+        budget.add_category(food_cat)
+
+    # Prevent transaction with unregistered category
+    tx_unregistered = Transaction(
+        tx_id="tx-unreg",
+        date=datetime.date(2026, 6, 15),
+        category="Leisure",
+        amount=Money("20.00"),
+        description="Movie",
+    )
+    with pytest.raises(CategoryNotFoundException):
+        budget.add_transaction(tx_unregistered)
+
+    # Registering transaction successfully within limits
+    tx1 = Transaction(
+        tx_id="tx-1",
+        date=datetime.date(2026, 6, 15),
+        category="Food",
+        amount=Money("45.50"),
+        description="Weekly Groceries",
+    )
+    budget.add_transaction(tx1)
+    assert len(budget.transactions) == 1
+    assert budget.get_category_spending("Food") == Money("45.50")
+    assert budget.get_total_spending() == Money("45.50")
+
+    # Add second transaction within limits
+    tx2 = Transaction(
+        tx_id="tx-2",
+        date=datetime.date(2026, 6, 16),
+        category="Food",
+        amount=Money("30.00"),
+        description="Snacks",
+    )
+    budget.add_transaction(tx2)
+    assert budget.get_category_spending("Food") == Money("75.50")
+    assert budget.get_total_spending() == Money("75.50")
+
+    # Try registering transaction exceeding limit without force (should fail)
+    tx_exceed = Transaction(
+        tx_id="tx-3",
+        date=datetime.date(2026, 6, 17),
+        category="Food",
+        amount=Money("30.00"),  # 75.50 + 30.00 = 105.50 (> 100.00 limit)
+        description="Dinner Out",
+    )
+    with pytest.raises(BudgetOverrunException):
+        budget.add_transaction(tx_exceed, force=False)
+
+    # Transaction should NOT be registered
+    assert budget.get_category_spending("Food") == Money("75.50")
+    assert len(budget.transactions) == 2
+
+    # Register transaction exceeding limit with force=True (should succeed)
+    budget.add_transaction(tx_exceed, force=True)
+    assert budget.get_category_spending("Food") == Money("105.50")
+    assert budget.get_total_spending() == Money("105.50")
+    assert len(budget.transactions) == 3
+
+    # Closing the cycle
+    budget.close_cycle()
+    assert budget.status == "CLOSED"
+
+    # Cannot add transaction to closed budget
+    tx_closed = Transaction(
+        tx_id="tx-closed",
+        date=datetime.date(2026, 6, 18),
+        category="Food",
+        amount=Money("5.00"),
+        description="Coffee",
+    )
+    with pytest.raises(BudgetClosedException):
+        budget.add_transaction(tx_closed)
+
 
