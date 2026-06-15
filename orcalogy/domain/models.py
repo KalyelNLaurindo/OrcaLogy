@@ -222,7 +222,6 @@ class Budget:
 
         self.transactions.append(transaction)
 
-
     def get_category_spending(self, category_name: str) -> Money:
         """Calculate total spending for a specific category."""
         category_txs = [tx for tx in self.transactions if tx.category == category_name]
@@ -241,5 +240,3 @@ class Budget:
     def close_cycle(self) -> None:
         """Close the fiscal cycle for this budget."""
         self.status = "CLOSED"
-
-

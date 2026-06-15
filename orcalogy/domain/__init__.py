@@ -7,6 +7,7 @@ from orcalogy.domain.errors import (
     NegativeAmountError,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+from orcalogy.domain.ports import ILedgerRepository
 from orcalogy.domain.ranking import CategoryRankingItem, calculate_ranking
 from orcalogy.domain.validation import LimitValidator
 
@@ -19,6 +20,7 @@ __all__ = [
     "CategoryRankingItem",
     "DomainError",
     "DuplicateCategoryError",
+    "ILedgerRepository",
     "LimitValidator",
     "Money",
     "NegativeAmountError",

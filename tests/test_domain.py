@@ -218,7 +218,6 @@ def test_transaction_instantiation() -> None:
         )
 
 
-
 def test_budget_aggregate_transitions() -> None:
     """Verify Budget aggregate transitions, calculations, and constraints."""
     import datetime
@@ -412,7 +411,6 @@ def test_ranking_calculations() -> None:
 
     # ZeroLimitNoSpend -> spent 0.00 -> deviation: limit 0, spent 0 -> 0.00%
 
-
     # Calculate ranking
     ranking = calculate_ranking(budget)
 
@@ -438,7 +436,3 @@ def test_ranking_calculations() -> None:
 
     assert ranking[4].category_name == "Transport"
     assert ranking[4].deviation == Decimal("-80.00")
-
-
-
-

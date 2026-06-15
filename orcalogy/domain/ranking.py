@@ -35,7 +35,6 @@ def calculate_ranking(budget: Budget) -> list[CategoryRankingItem]:
                 Decimal("0.01"), rounding="ROUND_HALF_UP"
             )
 
-
         items.append(
             CategoryRankingItem(
                 category_name=name,

@@ -11,10 +11,11 @@ Define the persistence abstraction port `ILedgerRepository` inside `orcalogy/dom
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain models and exception specifications are ready.
+* [x] Domain models and exception specifications are ready.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Typing]:** ILedgerRepository defines structural interfaces.
-* [ ] **[Verification - Mypy]:** Run `mypy --strict orcalogy/` showing no protocol typing errors.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Typing]:** ILedgerRepository defines structural interfaces.
+* [x] **[Verification - Mypy]:** Run `mypy --strict orcalogy/` showing no protocol typing errors.
+

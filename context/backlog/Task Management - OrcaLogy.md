@@ -121,7 +121,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / ARCH-ENABLER  
   * *Estimation/Priority:* P0 / Reach: 90, Impact: 3, Confidence: 0.8, Effort: 1 (RICE: 216)  
   * *TDD Test File:* `tests/test_domain.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 ### **⚡ Backlog Phase 3: Test-Driven Core Logic (Use Cases)**
 
@@ -263,7 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-14](TSK-14.md)]:** Define ILedgerRepository Interface Protocol
 * [ ] **[[TSK-15](TSK-15.md)]:** Create bootstrap.py DI Container
 * [ ] **[[TSK-16](TSK-16.md)]:** Implement Register Transaction Use Case
 * [ ] **[[TSK-17](TSK-17.md)]:** Implement Get Category Deviation Ranking Use Case
@@ -309,6 +308,7 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-11](TSK-11.md)]:** Implement Domain Validation Service
 * [x] **[[TSK-12](TSK-12.md)]:** Implement Category Deviation & Ranking Math
 * [x] **[[TSK-13](TSK-13.md)]:** Define Domain Exceptions & Errors
+* [x] **[[TSK-14](TSK-14.md)]:** Define ILedgerRepository Interface Protocol
 
 
 
