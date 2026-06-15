@@ -147,7 +147,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* Phase 3.1 / Core Use Cases  
   * *Estimation/Priority:* P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 60)  
   * *TDD Test File:* `tests/test_app.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-19](TSK-19.md)]: Implement Initialize Budget & Limits Use Case**  
   * *Epic/Requirement Link:* Phase 3.1 / Core Use Cases  
@@ -263,7 +263,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-18](TSK-18.md)]:** Implement Close Fiscal Cycle Use Case
 * [ ] **[[TSK-19](TSK-19.md)]:** Implement Initialize Budget & Limits Use Case
 * [ ] **[[TSK-20](TSK-20.md)]:** Concurrency Advisory File Locker
 * [ ] **[[TSK-21](TSK-21.md)]:** Lexical Flat-Text Journal Parser
@@ -309,6 +308,7 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-15](TSK-15.md)]:** Create bootstrap.py DI Container
 * [x] **[[TSK-16](TSK-16.md)]:** Implement Register Transaction Use Case
 * [x] **[[TSK-17](TSK-17.md)]:** Implement Get Category Deviation Ranking Use Case
+* [x] **[[TSK-18](TSK-18.md)]:** Implement Close Fiscal Cycle Use Case
 
 
 

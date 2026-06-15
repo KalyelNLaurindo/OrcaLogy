@@ -11,10 +11,10 @@ Implement cycle closing use case in `orcalogy/app/services.py`. Sets active budg
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Domain models exceptions complete.
+* [x] Domain models exceptions complete.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Status]:** Sets ledger budget status to Closed.
-* [ ] **[Verification - Exceptions]:** Running `pytest tests/test_app.py::test_close_budget_cycle` confirms blocking additions on closed states.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Status]:** Sets ledger budget status to Closed.
+* [x] **[Verification - Exceptions]:** Running `pytest tests/test_app.py::test_close_budget_cycle` confirms blocking additions on closed states.

@@ -68,3 +68,29 @@ class GetCategoryDeviationRankingUseCase:
             raise BudgetNotFoundError(f"Budget for month {month} was not found.")
 
         return calculate_ranking(budget)
+
+
+class CloseBudgetCycleUseCase:
+    """Use case to close the fiscal/budget cycle for a month.
+
+    Locks the budget state, preventing any further transaction additions.
+    """
+
+    def __init__(self, repository: ILedgerRepository) -> None:
+        self.repository = repository
+
+    def execute(self, month: str) -> None:
+        """Execute the use case to close the budget.
+
+        Args:
+            month: Period format YYYY-MM (e.g. '2026-06').
+
+        Raises:
+            BudgetNotFoundError: If the budget for the period does not exist.
+        """
+        budget = self.repository.get_budget(month)
+        if budget is None:
+            raise BudgetNotFoundError(f"Budget for month {month} was not found.")
+
+        budget.close_cycle()
+        self.repository.save_budget(budget)

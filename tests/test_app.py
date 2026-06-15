@@ -169,3 +169,67 @@ def test_get_ranking_usecase_not_found() -> None:
 
     with pytest.raises(BudgetNotFoundError):
         use_case.execute("2026-06")
+
+
+def test_close_budget_cycle_success() -> None:
+    """Verify that CloseBudgetCycleUseCase sets budget status to CLOSED."""
+    from orcalogy.app.services import CloseBudgetCycleUseCase
+
+    repo = FakeLedgerRepository()
+    budget = Budget(month="2026-06")
+    repo.save_budget(budget)
+
+    use_case = CloseBudgetCycleUseCase(repository=repo)
+    use_case.execute("2026-06")
+
+    saved_budget = repo.get_budget("2026-06")
+    assert saved_budget is not None
+    assert saved_budget.status == "CLOSED"
+
+
+def test_close_budget_cycle_not_found() -> None:
+    """Verify that CloseBudgetCycleUseCase raises BudgetNotFoundError
+
+    for non-existing period.
+    """
+    from orcalogy.app.services import CloseBudgetCycleUseCase
+    from orcalogy.domain.errors import BudgetNotFoundError
+
+    repo = FakeLedgerRepository()
+    use_case = CloseBudgetCycleUseCase(repository=repo)
+
+    with pytest.raises(BudgetNotFoundError):
+        use_case.execute("2026-06")
+
+
+def test_close_budget_cycle_blocks_further_transactions() -> None:
+    """Verify that a closed budget blocks further transaction registrations."""
+    import datetime
+
+    from orcalogy.app.services import (
+        CloseBudgetCycleUseCase,
+        RegisterTransactionUseCase,
+    )
+    from orcalogy.domain.errors import BudgetClosedError
+    from orcalogy.domain.models import BudgetCategory, Money, Transaction
+
+    repo = FakeLedgerRepository()
+    budget = Budget(month="2026-06")
+    budget.add_category(BudgetCategory("Food", Money("100.00")))
+    repo.save_budget(budget)
+
+    close_usecase = CloseBudgetCycleUseCase(repository=repo)
+    register_usecase = RegisterTransactionUseCase(repository=repo)
+
+    close_usecase.execute("2026-06")
+
+    tx = Transaction(
+        tx_id="tx-1",
+        date=datetime.date(2026, 6, 15),
+        category="Food",
+        amount=Money("30.00"),
+        description="Coffee",
+    )
+
+    with pytest.raises(BudgetClosedError):
+        register_usecase.execute(tx)
