@@ -11,8 +11,8 @@ Configure dependencies inside `pyproject.toml` or `requirements.txt`. Required p
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Poetry/pip environment is verified and active (TSK-01 complete).
-* [ ] pyproject.toml is generated and ready to receive properties.
+* [x] Poetry/pip environment is verified and active (TSK-01 complete).
+* [x] pyproject.toml is generated and ready to receive properties.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 

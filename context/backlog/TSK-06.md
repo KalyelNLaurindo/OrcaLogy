@@ -11,8 +11,8 @@ Implement config loader to parse `config.toml` mappings. Extracts general config
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Directory scaffold is active (TSK-05 complete).
-* [ ] Python's native `tomllib` (or standard `toml` library) configured for use.
+* [x] Directory scaffold is active (TSK-05 complete).
+* [x] Python's native `tomllib` (or standard `toml` library) configured for use.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 

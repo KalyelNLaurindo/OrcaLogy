@@ -11,8 +11,8 @@ Create `CLAUDE.md` in repository root declaring development parameters, executio
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Git repository is active (TSK-02 complete).
-* [ ] Playbook CLAUDE.md templates are verified.
+* [x] Git repository is active (TSK-02 complete).
+* [x] Playbook CLAUDE.md templates are verified.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
