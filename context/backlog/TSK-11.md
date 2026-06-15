@@ -11,10 +11,10 @@ Create `orcalogy/domain/validation.py` checking incoming transactions against ca
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Transaction, BudgetCategory and Budget models are completed.
+* [x] Transaction, BudgetCategory and Budget models are completed.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Validation]:** Validation class detects and flags budget limit violations.
-* [ ] **[Verification]:** `pytest tests/test_domain.py::test_limit_validation_rules` completes successfully.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Validation]:** Validation class detects and flags budget limit violations.
+* [x] **[Verification]:** `pytest tests/test_domain.py::test_limit_validation_rules` completes successfully.

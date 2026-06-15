@@ -7,8 +7,6 @@ from typing import Any, Union
 
 from orcalogy.domain.errors import (
     BudgetClosedException,
-    BudgetOverrunException,
-    CategoryNotFoundException,
     DuplicateCategoryException,
 )
 
@@ -217,21 +215,12 @@ class Budget:
         if self.status == "CLOSED":
             raise BudgetClosedException("Cannot add transaction to a closed budget.")
 
-        if transaction.category not in self.categories:
-            raise CategoryNotFoundException(
-                f"Category '{transaction.category}' is not registered."
-            )
+        from orcalogy.domain.validation import LimitValidator
 
-        category = self.categories[transaction.category]
-        current_spending = self.get_category_spending(transaction.category)
-        new_total = current_spending + transaction.amount
-
-        if new_total > category.limit and not force:
-            raise BudgetOverrunException(
-                f"Transaction exceeds '{category.name}' limit of {category.limit}."
-            )
+        LimitValidator.validate_transaction(self, transaction, force)
 
         self.transactions.append(transaction)
+
 
     def get_category_spending(self, category_name: str) -> Money:
         """Calculate total spending for a specific category."""

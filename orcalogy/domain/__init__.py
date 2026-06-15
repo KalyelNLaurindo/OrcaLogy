@@ -6,6 +6,7 @@ from orcalogy.domain.errors import (
     DuplicateCategoryException,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+from orcalogy.domain.validation import LimitValidator
 
 __all__ = [
     "Budget",
@@ -15,6 +16,7 @@ __all__ = [
     "CategoryNotFoundException",
     "DomainError",
     "DuplicateCategoryException",
+    "LimitValidator",
     "Money",
     "Transaction",
 ]

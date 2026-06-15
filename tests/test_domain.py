@@ -9,6 +9,7 @@ from orcalogy.domain.errors import (
     DuplicateCategoryException,
 )
 from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+from orcalogy.domain.validation import LimitValidator
 
 
 def test_money_initialization() -> None:
@@ -307,5 +308,52 @@ def test_budget_aggregate_transitions() -> None:
     )
     with pytest.raises(BudgetClosedException):
         budget.add_transaction(tx_closed)
+
+
+def test_limit_validation_rules() -> None:
+    """Verify LimitValidator standalone methods and logic checks."""
+    import datetime
+
+    budget = Budget(month="2026-06")
+    food_cat = BudgetCategory("Food", Money("100.00"))
+    budget.add_category(food_cat)
+
+    # Spending is 0.00, check overrun for 90.00 (should be False)
+    assert not LimitValidator.check_overrun(budget, "Food", Money("90.00"))
+
+    # Check overrun for 110.00 (should be True)
+    assert LimitValidator.check_overrun(budget, "Food", Money("110.00"))
+
+    # Check overrun for unregistered category (should raise CategoryNotFoundException)
+    with pytest.raises(CategoryNotFoundException):
+        LimitValidator.check_overrun(budget, "Leisure", Money("10.00"))
+
+    # Register tx of 80.00
+    tx1 = Transaction(
+        tx_id="tx-1",
+        date=datetime.date(2026, 6, 15),
+        category="Food",
+        amount=Money("80.00"),
+        description="Grocery",
+    )
+    # validate_transaction should pass
+    LimitValidator.validate_transaction(budget, tx1)
+    budget.add_transaction(tx1)
+
+    # Next tx of 30.00 makes it 110.00 (exceeds 100.00)
+    tx2 = Transaction(
+        tx_id="tx-2",
+        date=datetime.date(2026, 6, 16),
+        category="Food",
+        amount=Money("30.00"),
+        description="Restaurant",
+    )
+    # should raise BudgetOverrunException when force=False
+    with pytest.raises(BudgetOverrunException):
+        LimitValidator.validate_transaction(budget, tx2, force=False)
+
+    # should pass when force=True
+    LimitValidator.validate_transaction(budget, tx2, force=True)
+
 
 
