@@ -11,10 +11,10 @@ Implement lexical text scanning in `orcalogy/infra/parser.py` parsing flat journ
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Flat-text syntax specifications defined.
+* [x] Flat-text syntax specifications defined.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Lexer]:** Converts raw file text lines to Transaction objects.
-* [ ] **[Verification]:** Tests pass under `pytest tests/test_infra.py::test_lexical_parser` with both valid and invalid transaction lines.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Lexer]:** Converts raw file text lines to Transaction objects.
+* [x] **[Verification]:** 22 tests pass in `tests/test_infra.py` covering valid lines, empty lines, comments, tag parsing, deterministic ID generation, syntax warnings (wrong field count, invalid date, invalid amount, zero/negative amount, empty category, empty description), mixed input, and disk-backed file reading.
