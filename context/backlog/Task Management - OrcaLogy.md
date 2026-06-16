@@ -173,7 +173,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / RF02 / PERSISTENCE  
   * *Estimation/Priority:* P0 / Reach: 90, Impact: 3, Confidence: 0.8, Effort: 2 (RICE: 108)  
   * *TDD Test File:* `tests/test_infra.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-23](TSK-23.md)]: Setup Typer CLI Controller & Commands**  
   * *Epic/Requirement Link:* RF01 / CLI  
@@ -294,7 +294,7 @@ The backlog is structured sequentially based on the active phases defined in the
 ## **3. 📋 Basic Markdown Kanban Board**
 
 ### **🔴 To Do (Ready for Development)**
-* [ ] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer
+
 * [ ] **[[TSK-23](TSK-23.md)]:** Setup Typer CLI Controller & Commands
 * [ ] **[[TSK-24](TSK-24.md)]:** Implement orca init CLI Command
 * [ ] **[[TSK-25](TSK-25.md)]:** Implement orca add CLI Command with Validation Prompt
@@ -324,6 +324,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+* [x] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer
 * [x] **[[TSK-21](TSK-21.md)]:** Lexical Flat-Text Journal Parser
 * [x] **[[TSK-01](TSK-01.md)]:** Setup Python Environment & Poetry
 * [x] **[[TSK-02](TSK-02.md)]:** Git Repository Initialization & Config

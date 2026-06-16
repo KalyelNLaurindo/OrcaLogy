@@ -11,10 +11,10 @@ Implement `orcalogy/infra/file_repo.py` extending `ILedgerRepository`. Implement
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] POSIX Locker and Lexical Parser modules are tested and complete.
+* [x] POSIX Locker and Lexical Parser modules are tested and complete.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Atomic]:** Enforces locks and updates journal files atomically without leaving corrupted, half-written states.
-* [ ] **[Verification]:** Running `pytest tests/test_infra.py::test_file_repo_atomic_writes` passes.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Atomic]:** Enforces locks and updates journal files atomically without leaving corrupted, half-written states.
+* [x] **[Verification]:** 7 tests pass in `tests/test_infra.py` covering get/save round-trip with categories and transactions, no leftover .tmp files, status persistence, and concurrent write safety (`test_file_repo_atomic_writes`).

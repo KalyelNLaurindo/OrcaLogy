@@ -5,7 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from orcalogy.domain.models import Money
+from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+from orcalogy.infra.file_repo import FileLedgerRepository
 from orcalogy.infra.parser import load_config, parse_journal_file, parse_journal_lines
 
 
@@ -332,3 +333,147 @@ def test_parse_journal_file_handles_only_comments(tmp_path: Path) -> None:
 
     assert result.transactions == []
     assert result.warnings == []
+
+
+# ---------------------------------------------------------------------------
+# TSK-22 — Cycle 1: Basic get/save round-trip
+# ---------------------------------------------------------------------------
+
+
+def _make_budget_with_categories() -> Budget:
+    budget = Budget(month="2026-06")
+    budget.add_category(BudgetCategory(name="Alimentação", limit=Money("800.00")))
+    budget.add_category(BudgetCategory(name="Lazer", limit=Money("300.00")))
+    return budget
+
+
+def _make_transaction(date_str: str, category: str, amount: str, desc: str) -> Transaction:
+    return Transaction(
+        tx_id="tx_test01",
+        date=datetime.date.fromisoformat(date_str),
+        category=category,
+        amount=Money(amount),
+        description=desc,
+    )
+
+
+def test_file_repo_get_returns_none_for_unknown_month(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    assert repo.get_budget("2026-06") is None
+
+
+def test_file_repo_save_and_get_budget_with_categories(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    budget = _make_budget_with_categories()
+
+    repo.save_budget(budget)
+    loaded = repo.get_budget("2026-06")
+
+    assert loaded is not None
+    assert loaded.month == "2026-06"
+    assert loaded.status == "ACTIVE"
+    assert "Alimentação" in loaded.categories
+    assert loaded.categories["Alimentação"].limit == Money("800.00")
+    assert "Lazer" in loaded.categories
+    assert loaded.categories["Lazer"].limit == Money("300.00")
+
+
+def test_file_repo_save_and_get_budget_with_transactions(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    budget = _make_budget_with_categories()
+    tx = _make_transaction("2026-06-15", "Alimentação", "45.50", "Supermercado")
+    budget.transactions.append(tx)
+
+    repo.save_budget(budget)
+    loaded = repo.get_budget("2026-06")
+
+    assert loaded is not None
+    assert len(loaded.transactions) == 1
+    assert loaded.transactions[0].category == "Alimentação"
+    assert loaded.transactions[0].amount == Money("45.50")
+    assert loaded.transactions[0].date == datetime.date(2026, 6, 15)
+
+
+# ---------------------------------------------------------------------------
+# TSK-22 — Cycle 2: Atomic write correctness
+# ---------------------------------------------------------------------------
+
+
+def test_file_repo_no_tmp_files_remain_after_save(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    budget = _make_budget_with_categories()
+
+    repo.save_budget(budget)
+
+    tmp_files = list(tmp_path.glob("*.tmp"))
+    assert tmp_files == [], f"Leftover tmp files found: {tmp_files}"
+
+
+def test_file_repo_save_updates_existing_budget(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    budget = _make_budget_with_categories()
+    repo.save_budget(budget)
+
+    tx = _make_transaction("2026-06-16", "Lazer", "120.00", "Cinema")
+    budget.transactions.append(tx)
+    repo.save_budget(budget)
+
+    loaded = repo.get_budget("2026-06")
+    assert loaded is not None
+    assert len(loaded.transactions) == 1
+    assert loaded.transactions[0].category == "Lazer"
+
+
+def test_file_repo_closed_budget_status_is_persisted(tmp_path: Path) -> None:
+    repo = FileLedgerRepository(str(tmp_path))
+    budget = _make_budget_with_categories()
+    repo.save_budget(budget)
+
+    budget.close_cycle()
+    repo.save_budget(budget)
+
+    loaded = repo.get_budget("2026-06")
+    assert loaded is not None
+    assert loaded.status == "CLOSED"
+
+
+# ---------------------------------------------------------------------------
+# TSK-22 — Cycle 3: Concurrent write safety
+# ---------------------------------------------------------------------------
+
+
+def test_file_repo_atomic_writes(tmp_path: Path) -> None:
+    """Verify concurrent saves do not corrupt the journal or metadata files."""
+    import threading
+
+    repo = FileLedgerRepository(str(tmp_path))
+    budget_a = _make_budget_with_categories()
+    repo.save_budget(budget_a)
+
+    errors: list[Exception] = []
+
+    def worker(amount: str, description: str) -> None:
+        try:
+            b = repo.get_budget("2026-06")
+            assert b is not None
+            tx = _make_transaction("2026-06-17", "Alimentação", amount, description)
+            b.transactions.append(tx)
+            repo.save_budget(b)
+        except Exception as exc:
+            errors.append(exc)
+
+    t1 = threading.Thread(target=worker, args=("10.00", "Padaria"))
+    t2 = threading.Thread(target=worker, args=("20.00", "Açougue"))
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    assert errors == [], f"Errors during concurrent writes: {errors}"
+
+    final = repo.get_budget("2026-06")
+    assert final is not None
+    meta_file = tmp_path / "ledger_2026-06.meta.json"
+    journal_file = tmp_path / "ledger_2026-06.journal"
+    assert meta_file.exists()
+    assert journal_file.exists()
