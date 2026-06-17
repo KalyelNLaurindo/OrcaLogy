@@ -11,10 +11,10 @@ Implement `add` command. Intercepts transaction updates: if validation flags war
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Register use case is complete (TSK-16 complete).
+* [x] Register use case is complete (TSK-16 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Cmd]:** CLI prompts operator on overruns and respects confirmation input.
-* [ ] **[Verification]:** `pytest tests/test_cli.py::test_add_command_validation_prompt` mocks inputs verifying correct outcomes.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Cmd]:** CLI prompts operator on overruns and respects confirmation input.
+* [x] **[Verification]:** `pytest tests/test_cli.py::test_add_command_validation_prompt` mocks inputs verifying correct outcomes.

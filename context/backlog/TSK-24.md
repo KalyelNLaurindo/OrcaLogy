@@ -11,10 +11,10 @@ Implement `init` command under `orcalogy/cli/commands.py` prompting users for ba
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Initial setup use case complete (TSK-19 complete).
+* [x] Initial setup use case complete (TSK-19 complete).
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Cmd]:** Running `orca init` successfully scaffolds config templates.
-* [ ] **[Verification]:** CLI tests in `tests/test_cli.py::test_init_command_output` assert file creations.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Cmd]:** Running `orca init` successfully scaffolds config templates.
+* [x] **[Verification]:** CLI tests in `tests/test_cli.py::test_init_command_output` assert file creations.
