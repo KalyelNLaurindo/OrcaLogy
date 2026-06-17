@@ -179,7 +179,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / CLI  
   * *Estimation/Priority:* P1 / Reach: 85, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 68)  
   * *TDD Test File:* `tests/test_cli.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-24](TSK-24.md)]: Implement orca init CLI Command**  
   * *Epic/Requirement Link:* RF01 / CLI  
@@ -295,7 +295,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-* [ ] **[[TSK-23](TSK-23.md)]:** Setup Typer CLI Controller & Commands
+* [x] **[[TSK-23](TSK-23.md)]:** Setup Typer CLI Controller & Commands
 * [ ] **[[TSK-24](TSK-24.md)]:** Implement orca init CLI Command
 * [ ] **[[TSK-25](TSK-25.md)]:** Implement orca add CLI Command with Validation Prompt
 * [ ] **[[TSK-26](TSK-26.md)]:** Implement orca report CLI Command
