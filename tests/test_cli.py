@@ -4,7 +4,6 @@ Covers base commands (help, version), init, add, and report subcommands.
 """
 
 import datetime
-from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
@@ -15,12 +14,6 @@ from orcalogy.domain.models import Money, Transaction
 from orcalogy.infra.file_repo import FileLedgerRepository
 
 runner = CliRunner()
-
-
-@pytest.fixture
-def tmp_repo(tmp_path: Path) -> FileLedgerRepository:
-    """Real repository backed by a temp directory — never touches ~/.orcalogy."""
-    return FileLedgerRepository(str(tmp_path))
 
 
 # ---------------------------------------------------------------------------

@@ -18,7 +18,7 @@
 | **Architecture Style** | Hexagonal (Ports & Adapters) & Domain-Driven Design (DDD)                                |
 | **Execution Engine**   | Plain-Text Journal Ledger with Advisory POSIX Locking and Atomic temporary-swap writes   |
 | **Date of Creation**   | June 15, 2026                                                                            |
-| **Current Version**    | v2.0.0                                                                                   |
+| **Current Version**    | v0.1.0                                                                                   |
 
 ---
 
@@ -68,12 +68,13 @@ To guarantee business integrity and mathematical correctness, OrcaLogy implement
 
 The client interface is designed for maximum keyboard efficiency. Use the following core execution commands:
 
-| Command / Action              | Syntax                                            | Description                                                             | Example                                           |
-| :---------------------------- | :------------------------------------------------ | :---------------------------------------------------------------------- | :------------------------------------------------ |
-| **Initialize System**         | `orca init`                                       | Bootstraps local directory, `config.toml` structure, and empty ledger.  | `orca init`                                       |
-| **Add Transaction**           | `orca add -c <cat> -a <val> -d <desc>`            | Registers a transaction; triggers real-time constraint validation.     | `orca add -c Leisure -a 150.00 -d "Concert"`      |
-| **Check Deviations Report**   | `orca report`                                     | Computes current spending, ranking categories by percentage deviation.  | `orca report`                                     |
-| **Close Fiscal Cycle**        | `orca close`                                      | Finalizes the current month and locks period with cryptographic GPG.   | `orca close`                                      |
+| Command / Action              | Syntax                                                        | Description                                                                      | Example                                              |
+| :---------------------------- | :------------------------------------------------------------ | :------------------------------------------------------------------------------- | :--------------------------------------------------- |
+| **Initialize Budget**         | `orca init`                                                   | Interactive prompt to create a monthly budget and set category limits.           | `orca init`                                          |
+| **Add Transaction**           | `orca add -c <cat> -a <val> -d <desc> --date YYYY-MM-DD`     | Registers a transaction; triggers real-time limit validation with overrun gate.  | `orca add -c Leisure -a 150.00 -d "Concert" --date 2026-06-16` |
+| **Budget Status**             | `orca status --month YYYY-MM`                                 | Quick one-screen snapshot: total spent, remaining, overrun count, cycle state.   | `orca status --month 2026-06`                        |
+| **Deviation Report**          | `orca report --month YYYY-MM`                                 | Color-coded ASCII table ranking categories by percentage deviation.              | `orca report --month 2026-06`                        |
+| **Close Fiscal Cycle**        | `orca close --month YYYY-MM`                                  | Locks the budget cycle for the month, blocking any further transactions.         | `orca close --month 2026-06`                         |
 
 > [!NOTE]
 > **Data & Validation Rules:**
@@ -111,36 +112,41 @@ The engineering design balances localized execution speed, offline data safety, 
 orcalogy/
 ├── pyproject.toml              # Dependency & tool configuration (Poetry, pytest, ruff, mypy)
 ├── README.md                   # Repository Entry Point
+├── CLAUDE.md                   # AI assistant reference guide
 ├── orcalogy/                   # Main Application Source
 │   ├── __init__.py
-│   ├── main.py                 # CLI/TUI Startup entrypoint
-│   ├── bootstrap.py            # Simple Dependency Injection Container
+│   ├── main.py                 # CLI entry point (exposes Typer app)
+│   ├── bootstrap.py            # Dependency Injection Container
 │   ├── cli/                    # CLI Commands (Typer Interface)
 │   │   ├── __init__.py
-│   │   └── commands.py
-│   ├── tui/                    # TUI Dashboard (Textual Interface)
+│   │   └── commands.py         # init, add, report, close, status commands
+│   ├── tui/                    # TUI Dashboard (Textual Interface) [in progress]
 │   │   ├── __init__.py
 │   │   ├── app.py
 │   │   └── screens.py
 │   ├── app/                    # Application Use Cases
 │   │   ├── __init__.py
-│   │   └── services.py
-│   ├── domain/                 # Bounded Domain Context
+│   │   └── services.py         # InitializeBudget, RegisterTransaction, Ranking, Close
+│   ├── domain/                 # Bounded Domain Context (zero framework imports)
 │   │   ├── __init__.py
-│   │   ├── models.py           # Dataclasses (Budget, Money, BudgetCategory)
-│   │   ├── validation.py       # Deterministic limit validator logic
-│   │   ├── ranking.py          # Category percentage deviation sorting
-│   │   └── errors.py
+│   │   ├── models.py           # Money, BudgetCategory, Transaction, Budget aggregate
+│   │   ├── ports.py            # ILedgerRepository protocol
+│   │   ├── validation.py       # Deterministic limit validator
+│   │   ├── ranking.py          # Category deviation sorting math
+│   │   └── errors.py           # Domain exception hierarchy
 │   └── infra/                  # Infrastructure Adapters (I/O, OS, File Repo)
 │       ├── __init__.py
-│       ├── file_repo.py        # Flat-file database controller
+│       ├── file_repo.py        # Atomic flat-file repository
 │       ├── parser.py           # Lexical journal file parser
-│       └── locker.py           # Concurrency lock manager
-└── tests/                      # Testing Suites
+│       └── locker.py           # Advisory concurrency lock manager
+└── tests/                      # Testing Suites (70+ tests, TDD-first)
     ├── __init__.py
-    ├── conftest.py             # Shared fixtures
-    ├── test_domain.py          # Domain unit test suite
-    └── test_infra.py           # File locking & atomic write integration tests
+    ├── conftest.py             # Shared pytest fixtures (tmp_repo)
+    ├── test_domain.py          # Domain unit tests
+    ├── test_infra.py           # File locking & atomic write integration tests
+    ├── test_app.py             # Application use case tests
+    ├── test_ports.py           # ILedgerRepository protocol tests
+    └── test_cli.py             # CLI command integration tests
 ```
 
 ---
@@ -166,14 +172,14 @@ orcalogy/
    ```
 
 3. **Step 6.2.2 - Initialize System Files:**
-   Initialize configuration and database journal templates:
+   Create your first monthly budget interactively:
    ```bash
    poetry run orca init
    ```
 
-4. **Step 6.2.3 - Launch TUI Dashboard:**
+4. **Step 6.2.3 - Launch TUI Dashboard** *(coming soon — TSK-27/28/29)*:
    ```bash
-   poetry run orca-tui
+   poetry run orca tui
    ```
 
 ### **6.3. Automated Verification Commands**

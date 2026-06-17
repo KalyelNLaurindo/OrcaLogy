@@ -199,6 +199,24 @@ The backlog is structured sequentially based on the active phases defined in the
   * *TDD Test File:* `tests/test_cli.py`  
   * *Status:* Done  
 
+* **[[TSK-41](TSK-41.md)]: Implement orca close CLI Command**  
+  * *Epic/Requirement Link:* RF01 / CLI  
+  * *Estimation/Priority:* P1 / Reach: 75, Impact: 2, Confidence: 1.0, Effort: 1 (RICE: 150)  
+  * *TDD Test File:* `tests/test_cli.py`  
+  * *Status:* To Do  
+
+* **[[TSK-42](TSK-42.md)]: Implement orca status CLI Command**  
+  * *Epic/Requirement Link:* RF03 / CLI  
+  * *Estimation/Priority:* P1 / Reach: 75, Impact: 2, Confidence: 1.0, Effort: 1 (RICE: 150)  
+  * *TDD Test File:* `tests/test_cli.py`  
+  * *Status:* To Do  
+
+* **[[TSK-43](TSK-43.md)]: Configurable Data Directory via config.toml**  
+  * *Epic/Requirement Link:* RF01 / CONFIGURATION  
+  * *Estimation/Priority:* P1 / Reach: 70, Impact: 1, Confidence: 0.8, Effort: 1 (RICE: 56)  
+  * *TDD Test File:* `tests/test_cli.py`  
+  * *Status:* To Do  
+
 * **[[TSK-27](TSK-27.md)]: Setup Textual TUI Application Framework**  
   * *Epic/Requirement Link:* RF05 / TUI  
   * *Estimation/Priority:* P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 3 (RICE: 40)  
@@ -299,6 +317,9 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-24](TSK-24.md)]:** Implement orca init CLI Command
 * [x] **[[TSK-25](TSK-25.md)]:** Implement orca add CLI Command with Validation Prompt
 * [x] **[[TSK-26](TSK-26.md)]:** Implement orca report CLI Command
+* [ ] **[[TSK-41](TSK-41.md)]:** Implement orca close CLI Command
+* [ ] **[[TSK-42](TSK-42.md)]:** Implement orca status CLI Command
+* [ ] **[[TSK-43](TSK-43.md)]:** Configurable Data Directory via config.toml
 * [ ] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [ ] **[[TSK-28](TSK-28.md)]:** Implement Textual TUI Dashboard Screen
 * [ ] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
