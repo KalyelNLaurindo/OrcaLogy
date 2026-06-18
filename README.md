@@ -72,9 +72,10 @@ The client interface is designed for maximum keyboard efficiency. Use the follow
 | :---------------------------- | :------------------------------------------------------------ | :------------------------------------------------------------------------------- | :--------------------------------------------------- |
 | **Initialize Budget**         | `orca init`                                                   | Interactive prompt to create a monthly budget and set category limits.           | `orca init`                                          |
 | **Add Transaction**           | `orca add -c <cat> -a <val> -d <desc> --date YYYY-MM-DD`     | Registers a transaction; triggers real-time limit validation with overrun gate.  | `orca add -c Leisure -a 150.00 -d "Concert" --date 2026-06-16` |
-| **Budget Status**             | `orca status --month YYYY-MM`                                 | Quick one-screen snapshot: total spent, remaining, overrun count, cycle state.   | `orca status --month 2026-06`                        |
 | **Deviation Report**          | `orca report --month YYYY-MM`                                 | Color-coded ASCII table ranking categories by percentage deviation.              | `orca report --month 2026-06`                        |
-| **Close Fiscal Cycle**        | `orca close --month YYYY-MM`                                  | Locks the budget cycle for the month, blocking any further transactions.         | `orca close --month 2026-06`                         |
+| **Launch TUI Dashboard**      | `orca tui [--data-dir PATH]`                                  | Launches the interactive Textual TUI (full dashboard pending TSK-28/29).        | `orca tui`                                           |
+| **Budget Status** *(planned)* | `orca status --month YYYY-MM`                                 | Quick one-screen snapshot: total spent, remaining, overrun count, cycle state.   | `orca status --month 2026-06`                        |
+| **Close Fiscal Cycle** *(planned)* | `orca close --month YYYY-MM`                             | Locks the budget cycle for the month, blocking any further transactions.         | `orca close --month 2026-06`                         |
 
 > [!NOTE]
 > **Data & Validation Rules:**
@@ -92,7 +93,7 @@ The engineering design balances localized execution speed, offline data safety, 
 | :------------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------------------- |
 | **Frontend Client**        | Python `Textual` & `Typer`                    | `Textual` renders a rich, responsive CSS-styled TUI. `Typer` parses CLI flags natively.    |
 | **Backend Engine**         | Python 3.11+                                  | Fast development velocity, strict type enforcement via `mypy`, and formatting via `ruff`.  |
-| **Concurrency & Safety**    | `filelock` & `os.replace`                     | Enforces POSIX-advisory locks during writes and performs atomic temporary-file swaps.      |
+| **Concurrency & Safety**    | `filelock` & `Path.replace()`                 | Enforces POSIX-advisory locks during writes and performs atomic temporary-file swaps.      |
 | **Database & Ledger**      | Standardized Plain-Text Ledger File           | Append-only human-readable format (`ledger.journal`), ensuring full data portability.     |
 
 ---
@@ -120,10 +121,9 @@ orcalogy/
 │   ├── cli/                    # CLI Commands (Typer Interface)
 │   │   ├── __init__.py
 │   │   └── commands.py         # init, add, report, close, status commands
-│   ├── tui/                    # TUI Dashboard (Textual Interface) [in progress]
+│   ├── tui/                    # TUI Dashboard (Textual Interface) [TSK-27 done / TSK-28-29 pending]
 │   │   ├── __init__.py
-│   │   ├── app.py
-│   │   └── screens.py
+│   │   └── app.py              # OrcaLogyApp shell with bindings and DI constructor
 │   ├── app/                    # Application Use Cases
 │   │   ├── __init__.py
 │   │   └── services.py         # InitializeBudget, RegisterTransaction, Ranking, Close
@@ -139,14 +139,15 @@ orcalogy/
 │       ├── file_repo.py        # Atomic flat-file repository
 │       ├── parser.py           # Lexical journal file parser
 │       └── locker.py           # Advisory concurrency lock manager
-└── tests/                      # Testing Suites (70+ tests, TDD-first)
+└── tests/                      # Testing Suites (74 tests, TDD-first)
     ├── __init__.py
     ├── conftest.py             # Shared pytest fixtures (tmp_repo)
     ├── test_domain.py          # Domain unit tests
     ├── test_infra.py           # File locking & atomic write integration tests
     ├── test_app.py             # Application use case tests
     ├── test_ports.py           # ILedgerRepository protocol tests
-    └── test_cli.py             # CLI command integration tests
+    ├── test_cli.py             # CLI command integration tests
+    └── test_tui.py             # Textual TUI shell tests (TSK-27)
 ```
 
 ---
@@ -177,9 +178,11 @@ orcalogy/
    poetry run orca init
    ```
 
-4. **Step 6.2.3 - Launch TUI Dashboard** *(coming soon — TSK-27/28/29)*:
+4. **Step 6.2.3 - Launch TUI Dashboard** *(shell available — full dashboard pending TSK-28/29)*:
    ```bash
    poetry run orca tui
+   # or with a custom data directory:
+   poetry run orca tui --data-dir /path/to/data
    ```
 
 ### **6.3. Automated Verification Commands**

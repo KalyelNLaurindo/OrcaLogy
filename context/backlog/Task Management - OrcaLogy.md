@@ -221,7 +221,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF05 / TUI  
   * *Estimation/Priority:* P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 3 (RICE: 40)  
   * *TDD Test File:* `tests/test_tui.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-28](TSK-28.md)]: Implement Textual TUI Dashboard Screen**  
   * *Epic/Requirement Link:* RF05 / TUI  
@@ -320,7 +320,7 @@ The backlog is structured sequentially based on the active phases defined in the
 * [ ] **[[TSK-41](TSK-41.md)]:** Implement orca close CLI Command
 * [ ] **[[TSK-42](TSK-42.md)]:** Implement orca status CLI Command
 * [ ] **[[TSK-43](TSK-43.md)]:** Configurable Data Directory via config.toml
-* [ ] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
+* [x] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [ ] **[[TSK-28](TSK-28.md)]:** Implement Textual TUI Dashboard Screen
 * [ ] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
 * [ ] **[[TSK-30](TSK-30.md)]:** Configure Rotating File JSON Logging
@@ -345,6 +345,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+* [x] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [x] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer
 * [x] **[[TSK-21](TSK-21.md)]:** Lexical Flat-Text Journal Parser
 * [x] **[[TSK-01](TSK-01.md)]:** Setup Python Environment & Poetry
