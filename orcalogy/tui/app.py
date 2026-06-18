@@ -14,6 +14,7 @@ from textual.binding import Binding, BindingType
 from textual.widgets import Footer, Header
 
 from orcalogy.infra.file_repo import FileLedgerRepository
+from orcalogy.tui.screens import DashboardScreen
 
 
 class OrcaLogyApp(App[None]):
@@ -39,3 +40,7 @@ class OrcaLogyApp(App[None]):
         """Yield the persistent shell chrome visible on every screen."""
         yield Header()
         yield Footer()
+
+    def on_mount(self) -> None:
+        """Push the dashboard as the first active screen after the shell mounts."""
+        self.push_screen(DashboardScreen())

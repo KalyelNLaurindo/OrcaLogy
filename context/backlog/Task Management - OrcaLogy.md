@@ -227,7 +227,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF05 / TUI  
   * *Estimation/Priority:* P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 3 (RICE: 40)  
   * *TDD Test File:* `tests/test_tui.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-29](TSK-29.md)]: Implement Textual TUI Transaction Entry Dialog**  
   * *Epic/Requirement Link:* RF05 / TUI  
@@ -345,6 +345,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+* [x] **[[TSK-28](TSK-28.md)]:** Implement Textual TUI Dashboard Screen
 * [x] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [x] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer
 * [x] **[[TSK-21](TSK-21.md)]:** Lexical Flat-Text Journal Parser
