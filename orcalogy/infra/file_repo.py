@@ -1,9 +1,7 @@
 import json
-import os
 from pathlib import Path
 
 from orcalogy.domain.models import Budget, BudgetCategory, Money
-from orcalogy.domain.ports import ILedgerRepository
 from orcalogy.infra.locker import FileLockManager
 from orcalogy.infra.parser import parse_journal_file
 
@@ -95,7 +93,7 @@ class FileLedgerRepository:
         }
         tmp = self._meta_tmp(budget.month)
         tmp.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-        os.replace(tmp, self._meta_path(budget.month))
+        tmp.replace(self._meta_path(budget.month))
 
     def _write_journal(self, budget: Budget) -> None:
         """Atomic write of the flat-text journal file."""
@@ -110,4 +108,4 @@ class FileLedgerRepository:
         content = "\n".join(lines) + ("\n" if lines else "")
         tmp = self._journal_tmp(budget.month)
         tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, self._journal_path(budget.month))
+        tmp.replace(self._journal_path(budget.month))

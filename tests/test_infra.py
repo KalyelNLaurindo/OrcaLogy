@@ -347,7 +347,9 @@ def _make_budget_with_categories() -> Budget:
     return budget
 
 
-def _make_transaction(date_str: str, category: str, amount: str, desc: str) -> Transaction:
+def _make_transaction(
+    date_str: str, category: str, amount: str, desc: str
+) -> Transaction:
     return Transaction(
         tx_id="tx_test01",
         date=datetime.date.fromisoformat(date_str),

@@ -61,7 +61,10 @@ def _make_tx_id(date_str: str, category: str, amount_str: str, description: str)
 def _parse_line(
     raw_line: str, line_number: int
 ) -> tuple[Transaction | None, ParseWarning | None]:
-    """Parse a single pipe-delimited journal line into a Transaction or a ParseWarning."""
+    """Parse a single pipe-delimited journal line.
+
+    Returns a Transaction on success or a ParseWarning describing the failure.
+    """
     parts = [p.strip() for p in raw_line.split("|")]
 
     if len(parts) < 4 or len(parts) > 5:
@@ -101,7 +104,10 @@ def _parse_line(
         return None, ParseWarning(
             line_number=line_number,
             raw_line=raw_line,
-            message=f"Invalid amount '{amount_str}'. Must be a positive decimal number.",
+            message=(
+                f"Invalid amount '{amount_str}'."
+                " Must be a positive decimal number."
+            ),
         )
 
     if money <= Money("0.00"):
