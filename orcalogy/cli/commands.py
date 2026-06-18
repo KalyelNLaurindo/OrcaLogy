@@ -18,6 +18,7 @@ from orcalogy.app.services import (
 from orcalogy.domain.errors import BudgetNotFoundError, BudgetOverrunError
 from orcalogy.domain.models import Money, Transaction
 from orcalogy.infra.file_repo import FileLedgerRepository
+from orcalogy.tui.app import OrcaLogyApp
 
 VERSION = "0.1.0"
 
@@ -131,6 +132,21 @@ def add_transaction(
             typer.echo("✅ Transação registrada com força.")
         else:
             typer.echo("Operação cancelada.")
+
+
+@app.command("tui")
+def tui(
+    data_dir: str = typer.Option(
+        str(Path.home() / ".orcalogy" / "data"),
+        "--data-dir",
+        help="Path to the data directory (defaults to ~/.orcalogy/data).",
+    ),
+) -> None:
+    """Launch the interactive TUI dashboard."""
+    dir_path = Path(data_dir)
+    dir_path.mkdir(parents=True, exist_ok=True)
+    repo = FileLedgerRepository(str(dir_path))
+    OrcaLogyApp(repository=repo).run()
 
 
 @app.command("report")
