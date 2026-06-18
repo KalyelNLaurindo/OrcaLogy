@@ -152,3 +152,121 @@ async def test_dashboard_refresh_binding(tui_app: OrcaLogyApp) -> None:
     async with tui_app.run_test() as pilot:
         await pilot.press("r")
         # No exception raised = refresh completed successfully in empty state.
+
+
+# ---------------------------------------------------------------------------
+# TSK-29 — TransactionEntryDialog tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def tui_app_with_budget(tmp_path: Path) -> OrcaLogyApp:
+    """TUI app with a seeded budget — gives the modal a valid context to submit into."""
+    import datetime
+
+    from orcalogy.app.services import InitializeBudgetUseCase
+    from orcalogy.domain.models import Money
+
+    repo = FileLedgerRepository(str(tmp_path))
+    month = datetime.date.today().strftime("%Y-%m")
+    InitializeBudgetUseCase(repo).execute(
+        month, {"Food": Money("500.00"), "Transport": Money("100.00")}
+    )
+    return OrcaLogyApp(repository=repo)
+
+
+async def test_transaction_entry_modal_compose(
+    tui_app_with_budget: OrcaLogyApp,
+) -> None:
+    """Verify the modal renders all required input fields and action buttons."""
+    from textual.widgets import Button, Input
+
+    from orcalogy.tui.screens import TransactionEntryDialog
+
+    async with tui_app_with_budget.run_test() as pilot:
+        await pilot.press("n")
+        await pilot.pause()
+
+        assert isinstance(pilot.app.screen, TransactionEntryDialog)
+        assert len(pilot.app.screen.query(Input)) == 4
+        assert len(pilot.app.screen.query(Button)) == 2
+
+
+async def test_transaction_entry_modal_cancel(
+    tui_app_with_budget: OrcaLogyApp,
+) -> None:
+    """Verify pressing Escape dismisses the modal without registering a transaction."""
+    from orcalogy.tui.screens import DashboardScreen
+
+    async with tui_app_with_budget.run_test() as pilot:
+        await pilot.press("n")
+        await pilot.pause()
+        await pilot.press("escape")
+        await pilot.pause()
+
+        assert isinstance(pilot.app.screen, DashboardScreen)
+
+
+async def test_transaction_entry_modal_submit_valid(tmp_path: Path) -> None:
+    """Verify a valid transaction is persisted and the modal closes on submit."""
+    import datetime
+
+    from textual.widgets import Input
+
+    from orcalogy.app.services import InitializeBudgetUseCase
+    from orcalogy.domain.models import Money
+    from orcalogy.tui.screens import DashboardScreen
+
+    repo = FileLedgerRepository(str(tmp_path))
+    month = datetime.date.today().strftime("%Y-%m")
+    InitializeBudgetUseCase(repo).execute(month, {"Food": Money("500.00")})
+
+    async with OrcaLogyApp(repository=repo).run_test() as pilot:
+        await pilot.press("n")
+        await pilot.pause()
+
+        screen = pilot.app.screen
+        screen.query_one("#input-category", Input).value = "Food"
+        screen.query_one("#input-amount", Input).value = "75.00"
+        screen.query_one("#input-description", Input).value = "Lunch"
+
+        await pilot.click("#btn-submit")
+        await pilot.pause()
+
+        assert isinstance(pilot.app.screen, DashboardScreen)
+        budget = repo.get_budget(month)
+        assert budget is not None
+        assert len(budget.transactions) == 1
+        assert budget.transactions[0].amount == Money("75.00")
+
+
+async def test_transaction_entry_modal_overrun_warning(tmp_path: Path) -> None:
+    """Verify a transaction breaching the category limit shows an inline warning."""
+    import datetime
+
+    from textual.widgets import Input, Label
+
+    from orcalogy.app.services import InitializeBudgetUseCase
+    from orcalogy.domain.models import Money
+    from orcalogy.tui.screens import TransactionEntryDialog
+
+    repo = FileLedgerRepository(str(tmp_path))
+    month = datetime.date.today().strftime("%Y-%m")
+    InitializeBudgetUseCase(repo).execute(month, {"Food": Money("10.00")})
+
+    async with OrcaLogyApp(repository=repo).run_test() as pilot:
+        await pilot.press("n")
+        await pilot.pause()
+
+        screen = pilot.app.screen
+        screen.query_one("#input-category", Input).value = "Food"
+        screen.query_one("#input-amount", Input).value = "999.00"
+        screen.query_one("#input-description", Input).value = "Expensive"
+
+        await pilot.click("#btn-submit")
+        await pilot.pause()
+
+        # Modal must stay open — overrun triggers a warning, not a dismissal
+        assert isinstance(pilot.app.screen, TransactionEntryDialog)
+        error_label = pilot.app.screen.query_one("#dialog-error", Label)
+        assert "Limit exceeded" in str(error_label.content)
