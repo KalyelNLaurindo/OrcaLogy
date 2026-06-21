@@ -314,6 +314,8 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+### **🌐 Backlog Phase 7.1: Internacionalização (i18n) & Localização TUI**
+
 - **[[TSK-45](TSK-45.md)]: i18n JSON translation engine & config adapter**
   - _Epic/Requirement Link:_ Phase 7.6 / i18n
   - _Estimation/Priority:_ P2 / Reach: 90, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 72)
@@ -326,9 +328,17 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+### **🎨 Backlog Phase 7.2: Acessibilidade & UX Modal Interativo**
+
 - **[[TSK-47](TSK-47.md)]: Interactive Language Selector Dialog & Helper Cards**
   - _Epic/Requirement Link:_ Phase 7.7 / UX
   - _Estimation/Priority:_ P2 / Reach: 95, Impact: 2.5, Confidence: 0.9, Effort: 1 (RICE: 213.75)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
+- **[[TSK-48](TSK-48.md)]: TUI & Textual Screen-Reader Adaptations & Contrast Policy**
+  - _Epic/Requirement Link:_ Phase 7.7 / Acessibilidade
+  - _Estimation/Priority:_ P2 / Reach: 95, Impact: 3.0, Confidence: 1.0, Effort: 1 (RICE: 285.0)
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
@@ -347,6 +357,7 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-45](TSK-45.md)]:** i18n JSON translation engine & config adapter (2 SP)
 - [ ] **[[TSK-46](TSK-46.md)]:** Textual TUI Widget String Translation Mapping (2 SP)
 - [ ] **[[TSK-47](TSK-47.md)]:** Interactive Language Selector Dialog & Helper Cards (1 SP)
+- [ ] **[[TSK-48](TSK-48.md)]:** TUI & Textual Screen-Reader Adaptations & Contrast Policy (1 SP)
 
 
 ### **🟡 In Progress (Actively Being Built)**
