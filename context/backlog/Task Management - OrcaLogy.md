@@ -314,6 +314,24 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+- **[[TSK-45](TSK-45.md)]: i18n JSON translation engine & config adapter**
+  - _Epic/Requirement Link:_ Phase 7.6 / i18n
+  - _Estimation/Priority:_ P2 / Reach: 90, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 72)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
+- **[[TSK-46](TSK-46.md)]: Textual TUI Widget String Translation Mapping**
+  - _Epic/Requirement Link:_ Phase 7.6 / i18n
+  - _Estimation/Priority:_ P2 / Reach: 90, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 72)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
+- **[[TSK-47](TSK-47.md)]: Interactive Language Selector Dialog & Helper Cards**
+  - _Epic/Requirement Link:_ Phase 7.7 / UX
+  - _Estimation/Priority:_ P2 / Reach: 95, Impact: 2.5, Confidence: 0.9, Effort: 1 (RICE: 213.75)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
 ---
 
 ## **3. 📋 Basic Markdown Kanban Board**
@@ -326,6 +344,9 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-39](TSK-39.md)]:** Tag-based Analytics & Reporting
 - [ ] **[[TSK-40](TSK-40.md)]:** Multi-Format Report Exporter
 - [ ] **[[TSK-44](TSK-44.md)]:** Graceful Concurrency Lock Timeout Handling
+- [ ] **[[TSK-45](TSK-45.md)]:** i18n JSON translation engine & config adapter (2 SP)
+- [ ] **[[TSK-46](TSK-46.md)]:** Textual TUI Widget String Translation Mapping (2 SP)
+- [ ] **[[TSK-47](TSK-47.md)]:** Interactive Language Selector Dialog & Helper Cards (1 SP)
 
 
 ### **🟡 In Progress (Actively Being Built)**
