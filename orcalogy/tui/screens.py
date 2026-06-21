@@ -56,14 +56,35 @@ class TransactionEntryDialog(ModalScreen[None]):
 
     def compose(self) -> ComposeResult:
         """Render the dialog frame with four inputs, an error label, and two buttons."""
+        from textual.suggester import SuggestFromList
+        
         today = datetime.date.today().isoformat()
+        orca_app = cast("OrcaLogyApp", self.app)
+        month = datetime.date.today().strftime("%Y-%m")
+        categories: list[str] = []
+        
+        try:
+            budget = orca_app.repository.get_budget(month)
+            if budget:
+                categories = list(budget.categories.keys())
+        except Exception:
+            # Fallback if repo/budget is not accessible during composition
+            pass
+
+        category_suggester = SuggestFromList(categories) if categories else None
+
         with Vertical(id="dialog"):
             yield Label("New Transaction", id="dialog-title")
-            yield Input(placeholder="Category (e.g. Food)", id="input-category")
+            yield Input(
+                placeholder="Category (e.g. Food)",
+                id="input-category",
+                suggester=category_suggester,
+            )
             yield Input(placeholder="Amount (e.g. 50.00)", id="input-amount")
             yield Input(placeholder="Description", id="input-description")
             yield Input(
-                placeholder=f"Date YYYY-MM-DD  (default: {today})",
+                value=today,
+                placeholder="Date YYYY-MM-DD",
                 id="input-date",
             )
             yield Label("", id="dialog-error")

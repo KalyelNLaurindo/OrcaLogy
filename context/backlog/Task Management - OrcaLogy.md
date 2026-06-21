@@ -233,7 +233,7 @@ The backlog is structured sequentially based on the active phases defined in the
   - _Epic/Requirement Link:_ RF05 / TUI
   - _Estimation/Priority:_ P2 / Reach: 75, Impact: 2, Confidence: 0.8, Effort: 3 (RICE: 40)
   - _TDD Test File:_ `tests/test_tui.py`
-  - _Status:_ To Do
+  - _Status:_ Done
 
 ### **🛡️ Backlog Phase 5: Diagnostics, Observability & Hardening**
 
@@ -313,7 +313,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-- [ ] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
 - [ ] **[[TSK-30](TSK-30.md)]:** Configure Rotating File JSON Logging
 - [ ] **[[TSK-31](TSK-31.md)]:** Implement Read-Only Circuit Breaker for Corrupted Ledgers
 - [ ] **[[TSK-32](TSK-32.md)]:** Implement Automated Backup Utility
@@ -336,6 +335,7 @@ _None_
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+- [x] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
 - [x] **[[TSK-41](TSK-41.md)]:** Implement orca close CLI Command
 - [x] **[[TSK-42](TSK-42.md)]:** Implement orca status CLI Command
 - [x] **[[TSK-43](TSK-43.md)]:** Configurable Data Directory via config.toml
