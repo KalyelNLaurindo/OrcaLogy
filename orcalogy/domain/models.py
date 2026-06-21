@@ -9,6 +9,7 @@ from orcalogy.domain.errors import (
     BudgetClosedError,
     DuplicateCategoryError,
     NegativeAmountError,
+    ReadOnlyException,
 )
 
 
@@ -196,12 +197,16 @@ class Budget:
     categories: dict[str, BudgetCategory] = field(default_factory=dict)
     transactions: list[Transaction] = field(default_factory=list)
     status: str = "ACTIVE"
+    read_only: bool = False
 
     def add_category(self, category: BudgetCategory) -> None:
         """Add a category to the budget.
 
         Raises DuplicateCategoryException if it already exists.
         """
+        if self.read_only:
+            raise ReadOnlyException("Cannot add category to a read-only budget.")
+
         if category.name in self.categories:
             raise DuplicateCategoryError(
                 f"Category '{category.name}' already exists in budget."
@@ -213,6 +218,9 @@ class Budget:
 
         Validates status, category registration, and limits.
         """
+        if self.read_only:
+            raise ReadOnlyException("Cannot add transaction to a read-only budget.")
+
         if self.status == "CLOSED":
             raise BudgetClosedError("Cannot add transaction to a closed budget.")
 
@@ -239,4 +247,6 @@ class Budget:
 
     def close_cycle(self) -> None:
         """Close the fiscal cycle for this budget."""
+        if self.read_only:
+            raise ReadOnlyException("Cannot close cycle on a read-only budget.")
         self.status = "CLOSED"

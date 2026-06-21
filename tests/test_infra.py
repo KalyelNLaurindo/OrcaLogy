@@ -519,3 +519,57 @@ def test_observability_logging(tmp_path: Path) -> None:
     assert "timestamp" in log_data
     assert "line_number" in log_data
 
+
+def test_read_only_breaker(tmp_path: Path) -> None:
+    """Verify that a corrupted ledger triggers the read-only circuit breaker.
+
+    It must lock mutations both on the Budget entity and the repository writer.
+    """
+    import datetime
+
+    from orcalogy.domain.errors import ReadOnlyException
+    from orcalogy.domain.models import BudgetCategory, Money, Transaction
+
+    repo = FileLedgerRepository(str(tmp_path))
+    month = "2026-06"
+    
+    # 1. Create a metadata file
+    meta_file = tmp_path / f"ledger_{month}.meta.json"
+    meta_file.write_text(
+        '{"status": "ACTIVE", "categories": {"Food": "500.00"}}',
+        encoding="utf-8"
+    )
+
+    # 2. Write a corrupted journal file
+    journal_file = tmp_path / f"ledger_{month}.journal"
+    journal_file.write_text(
+        "2026-06-15 | Food | corrupted_amount | Supermarket\n",
+        encoding="utf-8"
+    )
+
+    # 3. Load budget - must lock state to read-only
+    budget = repo.get_budget(month)
+    assert budget is not None
+    assert budget.read_only is True
+
+    # 4. Assert mutations raise ReadOnlyException
+    with pytest.raises(ReadOnlyException):
+        budget.add_transaction(
+            Transaction(
+                tx_id="tx_new",
+                date=datetime.date(2026, 6, 16),
+                category="Food",
+                amount=Money("50.00"),
+                description="Lunch"
+            )
+        )
+
+    with pytest.raises(ReadOnlyException):
+        budget.add_category(BudgetCategory(name="Lazer", limit=Money("100.00")))
+
+    with pytest.raises(ReadOnlyException):
+        budget.close_cycle()
+
+    with pytest.raises(ReadOnlyException):
+        repo.save_budget(budget)
+

@@ -68,6 +68,8 @@ class FileLedgerRepository:
         if journal_file.exists():
             result = parse_journal_file(str(journal_file))
             budget.transactions = result.transactions
+            if result.warnings:
+                budget.read_only = True
 
         return budget
 
@@ -77,6 +79,10 @@ class FileLedgerRepository:
         Writes metadata (status + categories) and transactions (journal lines)
         to separate .tmp files, then atomically replaces the target files.
         """
+        if budget.read_only:
+            from orcalogy.domain.errors import ReadOnlyException
+            raise ReadOnlyException("Cannot save a read-only budget.")
+
         self._data_dir.mkdir(parents=True, exist_ok=True)
 
         with FileLockManager(str(self._lock_path(budget.month))):

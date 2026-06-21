@@ -38,3 +38,9 @@ class BudgetNotFoundError(DomainError):
     """Raised when a budget cannot be found in the repository."""
 
     pass
+
+
+class ReadOnlyException(DomainError):  # noqa: N818
+    """Raised when trying to mutate a budget locked to read-only."""
+
+    pass
