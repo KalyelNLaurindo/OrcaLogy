@@ -94,6 +94,12 @@ class CloseBudgetCycleUseCase:
         if budget is None:
             raise BudgetNotFoundError(f"Budget for month {month} was not found.")
 
+        from orcalogy.domain.errors import BudgetClosedError
+        if budget.status == "CLOSED":
+            raise BudgetClosedError(
+                f"Budget cycle for month {month} is already closed."
+            )
+
         budget.close_cycle()
         self.repository.save_budget(budget)
 

@@ -323,3 +323,76 @@ class TestReportCommand:
         result = runner.invoke(app, ["report", "--month", "2099-12"])
         assert result.exit_code != 0
         assert "não encontrado" in result.output
+
+
+# ---------------------------------------------------------------------------
+# TSK-41 — orca close
+# ---------------------------------------------------------------------------
+
+
+class TestCloseCommand:
+    """Group: orca close — lock budget cycle for a specific month."""
+
+    def test_close_locks_budget_successfully(
+        self,
+        tmp_repo: FileLedgerRepository,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Closing a valid open budget must succeed, lock it, and print confirmation."""
+        InitializeBudgetUseCase(tmp_repo).execute(
+            "2026-06", {"Alimentação": Money("100")}
+        )
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
+        
+        result = runner.invoke(app, ["close", "--month", "2026-06"])
+        assert result.exit_code == 0
+        assert "fechado" in result.output.lower()
+
+        # Subsequent add must fail because budget is locked
+        add_result = runner.invoke(
+            app,
+            [
+                "add",
+                "--category",
+                "Alimentação",
+                "--amount",
+                "50.00",
+                "--description",
+                "Almoço",
+                "--date",
+                "2026-06-17",
+            ],
+        )
+        assert add_result.exit_code != 0
+        assert "fechado" in add_result.output.lower()
+
+    def test_close_fails_for_nonexistent_month(
+        self,
+        tmp_repo: FileLedgerRepository,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Closing a month that has no initialized budget must fail."""
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
+        result = runner.invoke(app, ["close", "--month", "2026-07"])
+        assert result.exit_code != 0
+        assert "não encontrado" in result.output.lower()
+
+    def test_close_fails_for_already_closed_month(
+        self,
+        tmp_repo: FileLedgerRepository,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Closing an already locked budget cycle must fail with appropriate message."""
+        InitializeBudgetUseCase(tmp_repo).execute(
+            "2026-06", {"Alimentação": Money("100")}
+        )
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
+        
+        # Close once
+        runner.invoke(app, ["close", "--month", "2026-06"])
+        
+        # Close twice
+        result = runner.invoke(app, ["close", "--month", "2026-06"])
+        assert result.exit_code != 0
+        assert "já" in result.output.lower()
+

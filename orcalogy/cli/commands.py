@@ -11,11 +11,16 @@ from pathlib import Path
 import typer
 
 from orcalogy.app.services import (
+    CloseBudgetCycleUseCase,
     GetCategoryDeviationRankingUseCase,
     InitializeBudgetUseCase,
     RegisterTransactionUseCase,
 )
-from orcalogy.domain.errors import BudgetNotFoundError, BudgetOverrunError
+from orcalogy.domain.errors import (
+    BudgetClosedError,
+    BudgetNotFoundError,
+    BudgetOverrunError,
+)
 from orcalogy.domain.models import Money, Transaction
 from orcalogy.infra.file_repo import FileLedgerRepository
 from orcalogy.tui.app import OrcaLogyApp
@@ -132,6 +137,10 @@ def add_transaction(
             typer.echo("✅ Transação registrada com força.")
         else:
             typer.echo("Operação cancelada.")
+    except BudgetClosedError as exc:
+        typer.echo(f"Erro: o ciclo de orçamento está fechado. {exc}")
+        raise typer.Exit(1) from exc
+
 
 
 @app.command("tui")
@@ -183,3 +192,23 @@ def report(
             typer.echo(f"{_RED}{row}{_RESET}")
 
     typer.echo("─" * 58)
+
+
+@app.command("close")
+def close(
+    month: str = typer.Option(
+        ..., "--month", "-m", help="Budget month to close (YYYY-MM)"
+    ),
+) -> None:
+    """Close the budget cycle for a specific month, locking it from further changes."""
+    repo = _make_repo()
+    try:
+        CloseBudgetCycleUseCase(repo).execute(month)
+        typer.echo(f"✅ Ciclo de orçamento {month} fechado com sucesso.")
+    except BudgetNotFoundError:
+        typer.echo(f"Erro: orçamento para '{month}' não encontrado.")
+        raise typer.Exit(1) from None
+    except BudgetClosedError:
+        typer.echo(f"Erro: o ciclo de orçamento para '{month}' já está fechado.")
+        raise typer.Exit(1) from None
+
