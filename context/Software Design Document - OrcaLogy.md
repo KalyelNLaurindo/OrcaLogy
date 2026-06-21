@@ -356,6 +356,8 @@ orcalogy/
 - **ADR-002 (Storage Strategy):** Plain Text over SQL/SQLite. Fits developers' preferences. Fully human-readable.
 - **ADR-003 (Concurrency):** Advisory file-level locking via `filelock`.
 - **ADR-004 (Value Object representation):** Native `Decimal` wrapped in `Money` to prevent rounding anomalies.
+- **ADR-005 (Graceful Concurrency Timeout Handling):** Map `filelock.Timeout` to a custom domain-level exception `LedgerConcurrencyError` to keep the domain clean of library dependencies, and handle it in UI adapters (CLI/TUI) to prevent raw tracebacks.
+
 
 ---
 

@@ -45,7 +45,8 @@
 #### **Technical Challenge 3.1: Atomic and Consistent Local Text Ledger Writes**
 
 - **Friction Level:** Critical
-- **Architectural Solution:** To avoid database engines while maintaining strict data integrity, the CLI operates on an append-only, human-readable plain-text transaction file (`ledger.journal`). It enforces atomic writes using system-level POSIX advisory locking (`flock`/`lockf` via a `.lock` lockfile) during ingestion. Changes are committed by writing a temporary journal, checking checksum integrity, and atomically replacing the active file using the POSIX `rename(2)` system call.
+- **Architectural Solution:** To avoid database engines while maintaining strict data integrity, the CLI operates on an append-only, human-readable plain-text transaction file (`ledger.journal`). It enforces atomic writes using system-level POSIX advisory locking (`flock`/`lockf` via a `.lock` lockfile) during ingestion. Changes are committed by writing a temporary journal, checking checksum integrity, and atomically replacing the active file using the POSIX `rename(2)` system call. If a lock acquisition fails (e.g., due to a concurrency timeout), the repository converts the low-level library error into a custom domain `LedgerConcurrencyError` to be handled gracefully by UI clients (CLI/TUI) without raw tracebacks.
+
 
 #### **Technical Challenge 3.2: Immediate Zero-Latency Text Parsing & Indexing**
 

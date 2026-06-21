@@ -255,6 +255,13 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ Done
 
+- **[[TSK-44](TSK-44.md)]: Graceful Concurrency Lock Timeout Handling**
+  - _Epic/Requirement Link:_ RF02 / HARDENING
+  - _Estimation/Priority:_ P1 / Reach: 90, Impact: 2, Confidence: 0.8, Effort: 1 (RICE: 144)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
+
 ### **📦 Backlog Phase 6: Packaging, CI/CD & Release Preparation**
 
 - **[[TSK-33](TSK-33.md)]: Create MIT License File**
@@ -318,6 +325,8 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-38](TSK-38.md)]:** Git Cloud Backup & Auto-Sync
 - [ ] **[[TSK-39](TSK-39.md)]:** Tag-based Analytics & Reporting
 - [ ] **[[TSK-40](TSK-40.md)]:** Multi-Format Report Exporter
+- [ ] **[[TSK-44](TSK-44.md)]:** Graceful Concurrency Lock Timeout Handling
+
 
 ### **🟡 In Progress (Actively Being Built)**
 
