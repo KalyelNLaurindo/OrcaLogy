@@ -11,8 +11,8 @@ Write standard project documentation in `README.md`. Documents software patterns
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] All structural software components are functional.
+* [x] All structural software components are functional.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Functional - Docs]:** README compiles cleanly, detailing layout and setup guidelines.
+* [x] **[Functional - Docs]:** README compiles cleanly, detailing layout and setup guidelines.

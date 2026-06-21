@@ -11,8 +11,8 @@ Create `.github/workflows/ci.yml` defining automated test steps. Pipeline runs r
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Testing, linting, and type verification parameters set up locally.
+* [x] Testing, linting, and type verification parameters set up locally.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Functional - CI]:** Workflow completes successfully on mock pipeline runs.
+* [x] **[Functional - CI]:** Workflow completes successfully on mock pipeline runs.

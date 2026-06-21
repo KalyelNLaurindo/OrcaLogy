@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ master, main, feature/* ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached venv if exists
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
+
+    - name: Install dependencies
+      run: poetry install --no-interaction
+
+    - name: Run Ruff Lint Check
+      run: poetry run ruff check .
+
+    - name: Run Ruff Format Check
+      run: poetry run ruff format --check .
+
+    - name: Run Strict Mypy Type Checks
+      run: poetry run mypy --strict orcalogy/
+
+    - name: Run Pytest Verification Suite
+      run: poetry run pytest --cov=orcalogy --cov-report=term-missing

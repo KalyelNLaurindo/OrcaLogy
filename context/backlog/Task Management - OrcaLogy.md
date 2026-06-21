@@ -267,13 +267,13 @@ The backlog is structured sequentially based on the active phases defined in the
   - _Epic/Requirement Link:_ Phase 6.1 / CI/CD
   - _Estimation/Priority:_ P2 / Reach: 95, Impact: 2, Confidence: 0.8, Effort: 2 (RICE: 76)
   - _TDD Test File:_ None
-  - _Status:_ To Do
+  - _Status:_ Done
 
 - **[[TSK-35](TSK-35.md)]: Compile Final README.md Documentation**
   - _Epic/Requirement Link:_ Phase 6.1 / DOCUMENTATION
   - _Estimation/Priority:_ P2 / Reach: 100, Impact: 2, Confidence: 1.0, Effort: 1 (RICE: 200)
   - _TDD Test File:_ None
-  - _Status:_ To Do
+  - _Status:_ Done
 
 ### **🚀 Backlog Phase 7: Advanced Features & Extensions**
 
@@ -313,8 +313,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-- [ ] **[[TSK-34](TSK-34.md)]:** Configure GitHub Actions CI Pipeline
-- [ ] **[[TSK-35](TSK-35.md)]:** Compile Final README.md Documentation
 - [ ] **[[TSK-36](TSK-36.md)]:** CSV Import/Export Engine
 - [ ] **[[TSK-37](TSK-37.md)]:** Secure Cryptographic Ledger
 - [ ] **[[TSK-38](TSK-38.md)]:** Git Cloud Backup & Auto-Sync
@@ -331,6 +329,8 @@ _None_
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+- [x] **[[TSK-34](TSK-34.md)]:** Configure GitHub Actions CI Pipeline
+- [x] **[[TSK-35](TSK-35.md)]:** Compile Final README.md Documentation
 - [x] **[[TSK-33](TSK-33.md)]:** Create MIT License File
 - [x] **[[TSK-32](TSK-32.md)]:** Implement Automated Backup Utility
 - [x] **[[TSK-31](TSK-31.md)]:** Implement Read-Only Circuit Breaker for Corrupted Ledgers
