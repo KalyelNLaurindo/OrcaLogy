@@ -16,7 +16,7 @@ Currently the data directory is hardcoded in `_make_repo()` to `~/.orcalogy/data
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Tests verify that a config file with a custom `data_dir` overrides the default, and that missing config falls back gracefully.
-* [ ] **[Functional - Config]:** `~/.orcalogy/config.toml` with `[storage]\ndata_dir = "/custom/path"` is respected by all CLI commands.
-* [ ] **[Functional - Init]:** `orca init` creates `~/.orcalogy/config.toml` with default values on first run if it does not exist.
-* [ ] **[Verification]:** `pytest tests/test_cli.py` or dedicated `tests/test_config.py` passes green.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Tests verify that a config file with a custom `data_dir` overrides the default, and that missing config falls back gracefully.
+* [x] **[Functional - Config]:** `~/.orcalogy/config.toml` with `[storage]\ndata_dir = "/custom/path"` is respected by all CLI commands.
+* [x] **[Functional - Init]:** `orca init` creates `~/.orcalogy/config.toml` with default values on first run if it does not exist.
+* [x] **[Verification]:** `pytest tests/test_cli.py` or dedicated `tests/test_config.py` passes green.

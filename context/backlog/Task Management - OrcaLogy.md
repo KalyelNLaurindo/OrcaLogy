@@ -215,7 +215,7 @@ The backlog is structured sequentially based on the active phases defined in the
   * *Epic/Requirement Link:* RF01 / CONFIGURATION  
   * *Estimation/Priority:* P1 / Reach: 70, Impact: 1, Confidence: 0.8, Effort: 1 (RICE: 56)  
   * *TDD Test File:* `tests/test_cli.py`  
-  * *Status:* To Do  
+  * *Status:* Done  
 
 * **[[TSK-27](TSK-27.md)]: Setup Textual TUI Application Framework**  
   * *Epic/Requirement Link:* RF05 / TUI  
@@ -317,7 +317,6 @@ The backlog is structured sequentially based on the active phases defined in the
 * [x] **[[TSK-24](TSK-24.md)]:** Implement orca init CLI Command
 * [x] **[[TSK-25](TSK-25.md)]:** Implement orca add CLI Command with Validation Prompt
 * [x] **[[TSK-26](TSK-26.md)]:** Implement orca report CLI Command
-* [ ] **[[TSK-43](TSK-43.md)]:** Configurable Data Directory via config.toml
 * [x] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [ ] **[[TSK-28](TSK-28.md)]:** Implement Textual TUI Dashboard Screen
 * [ ] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
@@ -345,6 +344,7 @@ The backlog is structured sequentially based on the active phases defined in the
 
 * [x] **[[TSK-41](TSK-41.md)]:** Implement orca close CLI Command
 * [x] **[[TSK-42](TSK-42.md)]:** Implement orca status CLI Command
+* [x] **[[TSK-43](TSK-43.md)]:** Configurable Data Directory via config.toml
 * [x] **[[TSK-28](TSK-28.md)]:** Implement Textual TUI Dashboard Screen
 * [x] **[[TSK-27](TSK-27.md)]:** Setup Textual TUI Application Framework
 * [x] **[[TSK-22](TSK-22.md)]:** Atomic File Repository Writer

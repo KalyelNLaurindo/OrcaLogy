@@ -43,8 +43,25 @@ app = typer.Typer(
 
 
 def _make_repo() -> FileLedgerRepository:
-    """Create a FileLedgerRepository pointing to the default user data directory."""
-    data_dir = Path.home() / ".orcalogy" / "data"
+    """Create a FileLedgerRepository pointing to the user data directory.
+
+    Reads the configuration file if it exists, otherwise falls back to default.
+    """
+    home_dir = Path.home() / ".orcalogy"
+    config_file = home_dir / "config.toml"
+    data_dir = home_dir / "data"
+
+    if config_file.exists():
+        try:
+            import tomllib
+            with config_file.open("rb") as f:
+                data = tomllib.load(f)
+            custom_dir = data.get("storage", {}).get("data_dir", None)
+            if custom_dir:
+                data_dir = Path(custom_dir)
+        except Exception:
+            pass
+
     data_dir.mkdir(parents=True, exist_ok=True)
     return FileLedgerRepository(str(data_dir))
 
@@ -68,6 +85,15 @@ def main(
 @app.command("init")
 def init() -> None:
     """Create a new monthly budget and define spending limits per category."""
+    # Ensure config.toml exists on first run
+    home_dir = Path.home() / ".orcalogy"
+    home_dir.mkdir(parents=True, exist_ok=True)
+    config_file = home_dir / "config.toml"
+    if not config_file.exists():
+        escaped_data_dir = str(home_dir / "data").replace("\\", "\\\\")
+        default_config = f'[storage]\ndata_dir = "{escaped_data_dir}"\n'
+        config_file.write_text(default_config, encoding="utf-8")
+
     month = typer.prompt("Mês (YYYY-MM)")
 
     category_limits: dict[str, Money] = {}

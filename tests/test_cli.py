@@ -4,6 +4,7 @@ Covers base commands (help, version), init, add, and report subcommands.
 """
 
 import datetime
+from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
@@ -17,7 +18,7 @@ runner = CliRunner()
 
 
 # ---------------------------------------------------------------------------
-# TSK-23 — Base CLI
+# Base CLI
 # ---------------------------------------------------------------------------
 
 
@@ -52,7 +53,7 @@ class TestCliBaseCommands:
 
 
 # ---------------------------------------------------------------------------
-# TSK-24 — orca init
+# orca init
 # ---------------------------------------------------------------------------
 
 
@@ -96,7 +97,7 @@ class TestInitCommand:
 
 
 # ---------------------------------------------------------------------------
-# TSK-25 — orca add
+# orca add
 # ---------------------------------------------------------------------------
 
 
@@ -238,7 +239,7 @@ class TestAddCommand:
 
 
 # ---------------------------------------------------------------------------
-# TSK-26 — orca report
+# orca report
 # ---------------------------------------------------------------------------
 
 
@@ -326,7 +327,7 @@ class TestReportCommand:
 
 
 # ---------------------------------------------------------------------------
-# TSK-41 — orca close
+# orca close
 # ---------------------------------------------------------------------------
 
 
@@ -398,7 +399,7 @@ class TestCloseCommand:
 
 
 # ---------------------------------------------------------------------------
-# TSK-42 — orca status
+# orca status
 # ---------------------------------------------------------------------------
 
 
@@ -459,5 +460,74 @@ class TestStatusCommand:
         result = runner.invoke(app, ["status", "--month", "2026-07"])
         assert result.exit_code != 0
         assert "não encontrado" in result.output.lower()
+
+
+# ---------------------------------------------------------------------------
+# config.toml / storage
+# ---------------------------------------------------------------------------
+
+
+class TestConfigCommand:
+    """Group: config.toml loading and fallback storage path."""
+
+    def test_make_repo_respects_custom_data_dir(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """When ~/.orcalogy/config.toml exists with storage.data_dir, we must use it."""
+        config_dir = tmp_path / ".orcalogy"
+        config_dir.mkdir()
+        config_file = config_dir / "config.toml"
+        custom_data_dir = tmp_path / "custom_data"
+        
+        # Write config.toml using raw POSIX/Windows string representation
+        escaped_path = str(custom_data_dir).replace("\\", "\\\\")
+        config_file.write_text(
+            f'[storage]\ndata_dir = "{escaped_path}"\n', encoding="utf-8"
+        )
+
+        # Mock the home path lookup in commands.py
+        monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+
+        from orcalogy.cli.commands import _make_repo
+        repo = _make_repo()
+        assert repo.data_dir == custom_data_dir
+
+    def test_make_repo_falls_back_to_default_dir(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """When config.toml is missing, _make_repo must default to ~/.orcalogy/data."""
+        monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+
+        from orcalogy.cli.commands import _make_repo
+        repo = _make_repo()
+        expected = tmp_path / ".orcalogy" / "data"
+        assert repo.data_dir == expected
+
+    def test_init_creates_default_config_toml(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Running init for the first time must generate ~/.orcalogy/config.toml."""
+        monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+
+        # Mock repository generation so it writes to our tmp_path
+        from orcalogy.infra.file_repo import FileLedgerRepository
+        data_dir = tmp_path / ".orcalogy" / "data"
+        mock_repo = FileLedgerRepository(str(data_dir))
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: mock_repo)
+
+        config_file = tmp_path / ".orcalogy" / "config.toml"
+        assert not config_file.exists()
+
+        result = runner.invoke(app, ["init"], input="2026-06\nAlimentação\n500\n\n")
+        assert result.exit_code == 0
+        assert config_file.exists()
+        assert "[storage]" in config_file.read_text(encoding="utf-8")
+
 
 

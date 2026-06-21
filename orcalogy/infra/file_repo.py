@@ -21,6 +21,11 @@ class FileLedgerRepository:
     def __init__(self, data_dir: str) -> None:
         self._data_dir = Path(data_dir)
 
+    @property
+    def data_dir(self) -> Path:
+        """Returns the base data directory of the repository."""
+        return self._data_dir
+
     # ------------------------------------------------------------------
     # Path helpers
     # ------------------------------------------------------------------
