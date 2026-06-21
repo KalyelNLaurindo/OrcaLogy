@@ -65,3 +65,8 @@ def setup_logging(log_file_path: Path | None = None) -> None:
 
     root_logger.addHandler(handler)
     root_logger.setLevel(logging.INFO)
+
+
+if __name__ == "__main__":
+    app()
+
