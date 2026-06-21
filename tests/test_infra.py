@@ -479,3 +479,43 @@ def test_file_repo_atomic_writes(tmp_path: Path) -> None:
     journal_file = tmp_path / "ledger_2026-06.journal"
     assert meta_file.exists()
     assert journal_file.exists()
+
+
+# ---------------------------------------------------------------------------
+#  Observability logging test
+# ---------------------------------------------------------------------------
+
+
+def test_observability_logging(tmp_path: Path) -> None:
+    """Verify that setup_logging configures a rotating file log.
+
+    It must write structured JSON log lines to the log file.
+    """
+    import json
+    import logging
+
+    from orcalogy.main import setup_logging
+
+    log_file = tmp_path / "orca_test.log"
+    setup_logging(log_file_path=log_file)
+
+    logger = logging.getLogger("orcalogy.test")
+    logger.info("Test logging message")
+
+    # Flush logging handlers
+    for handler in logging.getLogger().handlers:
+        handler.flush()
+
+    assert log_file.exists()
+
+    with log_file.open(encoding="utf-8") as f:
+        lines = f.readlines()
+
+    assert len(lines) == 1
+    log_data = json.loads(lines[0])
+    assert log_data["level"] == "INFO"
+    assert log_data["message"] == "Test logging message"
+    assert log_data["module"] == "test_infra"
+    assert "timestamp" in log_data
+    assert "line_number" in log_data
+

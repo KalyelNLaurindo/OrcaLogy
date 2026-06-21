@@ -77,6 +77,9 @@ def main(
     ),
 ) -> None:
     """OrcaLogy budget CLI — run a subcommand or use --help."""
+    from orcalogy.main import setup_logging
+    setup_logging()
+
     if version:
         typer.echo(f"orca version {VERSION}")
         raise typer.Exit()

@@ -241,7 +241,7 @@ The backlog is structured sequentially based on the active phases defined in the
   - _Epic/Requirement Link:_ Phase 5.1 / OBSERVABILITY
   - _Estimation/Priority:_ P2 / Reach: 85, Impact: 1, Confidence: 0.8, Effort: 1 (RICE: 68)
   - _TDD Test File:_ `tests/test_infra.py`
-  - _Status:_ To Do
+  - _Status:_ Done
 
 - **[[TSK-31](TSK-31.md)]: Implement Read-Only Circuit Breaker for Corrupted Ledgers**
   - _Epic/Requirement Link:_ Phase 5.1 / HARDENING
@@ -313,7 +313,6 @@ The backlog is structured sequentially based on the active phases defined in the
 
 ### **🔴 To Do (Ready for Development)**
 
-- [ ] **[[TSK-30](TSK-30.md)]:** Configure Rotating File JSON Logging
 - [ ] **[[TSK-31](TSK-31.md)]:** Implement Read-Only Circuit Breaker for Corrupted Ledgers
 - [ ] **[[TSK-32](TSK-32.md)]:** Implement Automated Backup Utility
 - [ ] **[[TSK-33](TSK-33.md)]:** Create MIT License File
@@ -335,6 +334,7 @@ _None_
 
 ### **🟢 Done (Merged & Verified in Main Trunk)**
 
+- [x] **[[TSK-30](TSK-30.md)]:** Configure Rotating File JSON Logging
 - [x] **[[TSK-29](TSK-29.md)]:** Implement Textual TUI Transaction Entry Dialog
 - [x] **[[TSK-41](TSK-41.md)]:** Implement orca close CLI Command
 - [x] **[[TSK-42](TSK-42.md)]:** Implement orca status CLI Command

@@ -11,10 +11,10 @@ Setup file logger configurations in `orcalogy/main.py` using Python `logging.han
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Directory settings complete.
+* [x] Directory settings complete.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Log]:** Writes structured JSON log outputs containing execution details.
-* [ ] **[Verification]:** Tests in `tests/test_infra.py::test_observability_logging` confirm log file creation.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Log]:** Writes structured JSON log outputs containing execution details.
+* [x] **[Verification]:** Tests in `tests/test_infra.py::test_observability_logging` confirm log file creation.
