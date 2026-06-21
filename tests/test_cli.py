@@ -396,3 +396,68 @@ class TestCloseCommand:
         assert result.exit_code != 0
         assert "já" in result.output.lower()
 
+
+# ---------------------------------------------------------------------------
+# TSK-42 — orca status
+# ---------------------------------------------------------------------------
+
+
+class TestStatusCommand:
+    """Group: orca status — lightweight overview of the budget period."""
+
+    def test_status_shows_correct_totals_and_state(
+        self,
+        tmp_repo: FileLedgerRepository,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Status command must report totals, remaining budget, state, and overruns."""
+        InitializeBudgetUseCase(tmp_repo).execute(
+            "2026-06",
+            {"Alimentação": Money("100"), "Transporte": Money("200")},
+        )
+        # Category 1 overrun (+50)
+        RegisterTransactionUseCase(tmp_repo).execute(
+            Transaction(
+                tx_id="tx-1",
+                date=datetime.date(2026, 6, 16),
+                category="Alimentação",
+                amount=Money("150"),
+                description="Mercado",
+            ),
+            force=True,
+        )
+        # Category 2 under limits (50 spent / 200 limit)
+        RegisterTransactionUseCase(tmp_repo).execute(
+            Transaction(
+                tx_id="tx-2",
+                date=datetime.date(2026, 6, 16),
+                category="Transporte",
+                amount=Money("50"),
+                description="Gasolina",
+            )
+        )
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
+
+        result = runner.invoke(app, ["status", "--month", "2026-06"])
+        assert result.exit_code == 0
+        assert "active" in result.output.lower()
+        assert "spent: $200.00" in result.output.lower()
+        assert "budget: $300.00" in result.output.lower()
+        assert "remaining: $100.00" in result.output.lower()
+        assert (
+            "overrun category: 1" in result.output.lower()
+            or "overrun: 1" in result.output.lower()
+        )
+
+    def test_status_fails_for_nonexistent_month(
+        self,
+        tmp_repo: FileLedgerRepository,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Querying status for a month with no budget must fail."""
+        monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
+        result = runner.invoke(app, ["status", "--month", "2026-07"])
+        assert result.exit_code != 0
+        assert "não encontrado" in result.output.lower()
+
+

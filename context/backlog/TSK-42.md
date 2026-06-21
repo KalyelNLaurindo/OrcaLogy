@@ -16,6 +16,6 @@ Implement `orca status --month YYYY-MM` as a lightweight summary command. Unlike
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor.
-* [ ] **[Functional - Cmd]:** `orca status --month 2026-06` prints total spending, budget remaining, overrun count, and cycle status in under 10 lines of output.
-* [ ] **[Verification]:** `pytest tests/test_cli.py::TestStatusCommand` passes green.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor.
+* [x] **[Functional - Cmd]:** `orca status --month 2026-06` prints total spending, budget remaining, overrun count, and cycle status in under 10 lines of output.
+* [x] **[Verification]:** `pytest tests/test_cli.py::TestStatusCommand` passes green.

@@ -212,3 +212,38 @@ def close(
         typer.echo(f"Erro: o ciclo de orçamento para '{month}' já está fechado.")
         raise typer.Exit(1) from None
 
+
+@app.command("status")
+def status(
+    month: str = typer.Option(
+        ..., "--month", "-m", help="Budget month to query (YYYY-MM)"
+    ),
+) -> None:
+    """Show a lightweight snapshot overview of the budget period."""
+    repo = _make_repo()
+    budget = repo.get_budget(month)
+    if budget is None:
+        typer.echo(f"Erro: orçamento para '{month}' não encontrado.")
+        raise typer.Exit(1)
+
+    # Calculate consolidations
+    total_budget = Money("0.00")
+    for category in budget.categories.values():
+        total_budget += category.limit
+
+    total_spent = budget.get_total_spending()
+    remaining = total_budget - total_spent
+
+    overrun_count = 0
+    for cat_name, category in budget.categories.items():
+        cat_spending = budget.get_category_spending(cat_name)
+        if cat_spending > category.limit:
+            overrun_count += 1
+
+    typer.echo(f"Status: {budget.status}")
+    typer.echo(f"Budget: {total_budget}")
+    typer.echo(f"Spent: {total_spent}")
+    typer.echo(f"Remaining: {remaining}")
+    typer.echo(f"Overrun: {overrun_count}")
+
+
