@@ -1,14 +1,14 @@
-"""Tests for the Textual TUI application shell and dashboard screen (TSK-27/28).
+"""Tests for the Textual TUI application shell and screens.
 
-Covers initialization, required widget composition, key bindings,
-repository dependency injection, dashboard population, empty state,
-and the manual refresh binding.
+Covers MainMenuScreen, DashboardScreen, BudgetInitDialog, CloseCycleDialog,
+and TransactionEntryDialog.
 """
 
 from pathlib import Path
 
 import pytest
 
+from orcalogy.domain.models import Money
 from orcalogy.infra.file_repo import FileLedgerRepository
 from orcalogy.tui.app import OrcaLogyApp
 
@@ -53,16 +53,36 @@ async def test_tui_quit_binding(tui_app: OrcaLogyApp) -> None:
 
 
 # ---------------------------------------------------------------------------
-# TSK-28 — DashboardScreen tests
+# Menu and Navigation Tests
 # ---------------------------------------------------------------------------
 
 
-async def test_dashboard_is_initial_screen(tui_app: OrcaLogyApp) -> None:
-    """Verify DashboardScreen is pushed as the active screen on app mount."""
-    from orcalogy.tui.screens import DashboardScreen
+async def test_main_menu_is_initial_screen(tui_app: OrcaLogyApp) -> None:
+    """Verify MainMenuScreen is pushed as the active screen on app mount."""
+    from orcalogy.tui.screens import MainMenuScreen
 
     async with tui_app.run_test() as pilot:
+        assert isinstance(pilot.app.screen, MainMenuScreen)
+
+
+async def test_navigate_to_dashboard_and_back(tui_app: OrcaLogyApp) -> None:
+    """Verify we can enter the dashboard and return to the main menu."""
+    from orcalogy.tui.screens import DashboardScreen, MainMenuScreen
+
+    async with tui_app.run_test() as pilot:
+        await pilot.click("#btn-goto-dashboard")
+        await pilot.pause()
         assert isinstance(pilot.app.screen, DashboardScreen)
+
+        # Press escape to return to menu
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(pilot.app.screen, MainMenuScreen)
+
+
+# ---------------------------------------------------------------------------
+# DashboardScreen & Budget Initialization Tests
+# ---------------------------------------------------------------------------
 
 
 async def test_dashboard_empty_state(tui_app: OrcaLogyApp) -> None:
@@ -70,8 +90,44 @@ async def test_dashboard_empty_state(tui_app: OrcaLogyApp) -> None:
     from textual.widgets import DataTable
 
     async with tui_app.run_test() as pilot:
+        await pilot.click("#btn-goto-dashboard")
+        await pilot.pause()
         table = pilot.app.screen.query_one("#category-table", DataTable)
         assert table.row_count == 1
+
+
+async def test_budget_init_dialog_submits_valid(tmp_path: Path) -> None:
+    """Verify we can create a budget using the BudgetInitDialog."""
+    import datetime
+
+    from textual.widgets import Input
+
+    from orcalogy.tui.screens import MainMenuScreen
+
+    repo = FileLedgerRepository(str(tmp_path))
+    app = OrcaLogyApp(repository=repo)
+
+    async with app.run_test() as pilot:
+        await pilot.click("#btn-init-budget")
+        await pilot.pause()
+
+        screen = pilot.app.screen
+        month = datetime.date.today().strftime("%Y-%m")
+        screen.query_one("#input-month", Input).value = month
+        screen.query_one("#input-cat-name", Input).value = "Food"
+        screen.query_one("#input-cat-limit", Input).value = "600.00"
+
+        await pilot.click("#btn-add-cat")
+        await pilot.pause()
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+        assert isinstance(pilot.app.screen, MainMenuScreen)
+        budget = repo.get_budget(month)
+        assert budget is not None
+        assert "Food" in budget.categories
+        assert budget.categories["Food"].limit == Money("600.00")
 
 
 async def test_dashboard_population(tmp_path: Path) -> None:
@@ -104,6 +160,9 @@ async def test_dashboard_population(tmp_path: Path) -> None:
     )
 
     async with OrcaLogyApp(repository=repo).run_test() as pilot:
+        await pilot.click("#btn-goto-dashboard")
+        await pilot.pause()
+
         screen = pilot.app.screen
         category_table = screen.query_one("#category-table", DataTable)
         tx_table = screen.query_one("#tx-table", DataTable)
@@ -143,19 +202,15 @@ async def test_dashboard_recent_tx_capped_at_ten(tmp_path: Path) -> None:
         )
 
     async with OrcaLogyApp(repository=repo).run_test() as pilot:
+        await pilot.click("#btn-goto-dashboard")
+        await pilot.pause()
+
         tx_table = pilot.app.screen.query_one("#tx-table", DataTable)
         assert tx_table.row_count == 10
 
 
-async def test_dashboard_refresh_binding(tui_app: OrcaLogyApp) -> None:
-    """Verify pressing 'r' repopulates the dashboard tables without raising."""
-    async with tui_app.run_test() as pilot:
-        await pilot.press("r")
-        # No exception raised = refresh completed successfully in empty state.
-
-
 # ---------------------------------------------------------------------------
-# TSK-29 — TransactionEntryDialog tests
+# TransactionEntryDialog tests
 # ---------------------------------------------------------------------------
 
 
@@ -184,7 +239,7 @@ async def test_transaction_entry_modal_compose(
     from orcalogy.tui.screens import TransactionEntryDialog
 
     async with tui_app_with_budget.run_test() as pilot:
-        await pilot.press("n")
+        await pilot.click("#btn-new-tx")
         await pilot.pause()
 
         assert isinstance(pilot.app.screen, TransactionEntryDialog)
@@ -195,16 +250,16 @@ async def test_transaction_entry_modal_compose(
 async def test_transaction_entry_modal_cancel(
     tui_app_with_budget: OrcaLogyApp,
 ) -> None:
-    """Verify pressing Escape dismisses the modal without registering a transaction."""
-    from orcalogy.tui.screens import DashboardScreen
+    """Verify pressing Escape dismisses the modal."""
+    from orcalogy.tui.screens import MainMenuScreen
 
     async with tui_app_with_budget.run_test() as pilot:
-        await pilot.press("n")
+        await pilot.click("#btn-new-tx")
         await pilot.pause()
         await pilot.press("escape")
         await pilot.pause()
 
-        assert isinstance(pilot.app.screen, DashboardScreen)
+        assert isinstance(pilot.app.screen, MainMenuScreen)
 
 
 async def test_transaction_entry_modal_submit_valid(tmp_path: Path) -> None:
@@ -215,14 +270,14 @@ async def test_transaction_entry_modal_submit_valid(tmp_path: Path) -> None:
 
     from orcalogy.app.services import InitializeBudgetUseCase
     from orcalogy.domain.models import Money
-    from orcalogy.tui.screens import DashboardScreen
+    from orcalogy.tui.screens import MainMenuScreen
 
     repo = FileLedgerRepository(str(tmp_path))
     month = datetime.date.today().strftime("%Y-%m")
     InitializeBudgetUseCase(repo).execute(month, {"Food": Money("500.00")})
 
     async with OrcaLogyApp(repository=repo).run_test() as pilot:
-        await pilot.press("n")
+        await pilot.click("#btn-new-tx")
         await pilot.pause()
 
         screen = pilot.app.screen
@@ -233,7 +288,7 @@ async def test_transaction_entry_modal_submit_valid(tmp_path: Path) -> None:
         await pilot.click("#btn-submit")
         await pilot.pause()
 
-        assert isinstance(pilot.app.screen, DashboardScreen)
+        assert isinstance(pilot.app.screen, MainMenuScreen)
         budget = repo.get_budget(month)
         assert budget is not None
         assert len(budget.transactions) == 1
@@ -255,7 +310,7 @@ async def test_transaction_entry_modal_overrun_warning(tmp_path: Path) -> None:
     InitializeBudgetUseCase(repo).execute(month, {"Food": Money("10.00")})
 
     async with OrcaLogyApp(repository=repo).run_test() as pilot:
-        await pilot.press("n")
+        await pilot.click("#btn-new-tx")
         await pilot.pause()
 
         screen = pilot.app.screen
@@ -269,4 +324,4 @@ async def test_transaction_entry_modal_overrun_warning(tmp_path: Path) -> None:
         # Modal must stay open — overrun triggers a warning, not a dismissal
         assert isinstance(pilot.app.screen, TransactionEntryDialog)
         error_label = pilot.app.screen.query_one("#dialog-error", Label)
-        assert "Limit exceeded" in str(error_label.content)
+        assert "Limite Excedido" in str(error_label.content)

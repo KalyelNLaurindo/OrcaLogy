@@ -14,7 +14,7 @@ from textual.binding import Binding, BindingType
 from textual.widgets import Footer, Header
 
 from orcalogy.infra.file_repo import FileLedgerRepository
-from orcalogy.tui.screens import DashboardScreen
+from orcalogy.tui.screens import MainMenuScreen
 
 
 class OrcaLogyApp(App[None]):
@@ -28,8 +28,8 @@ class OrcaLogyApp(App[None]):
     SUB_TITLE = "Local-first budget manager"
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        Binding("q", "quit", "Quit", priority=True),
-        Binding("ctrl+d", "toggle_dark", "Toggle dark mode"),
+        Binding("q", "quit", "Sair", priority=True),
+        Binding("ctrl+d", "toggle_dark", "Modo Escuro"),
     ]
 
     def __init__(self, repository: FileLedgerRepository) -> None:
@@ -42,5 +42,6 @@ class OrcaLogyApp(App[None]):
         yield Footer()
 
     def on_mount(self) -> None:
-        """Push the dashboard as the first active screen after the shell mounts."""
-        self.push_screen(DashboardScreen())
+        """Push the menu as the first active screen after the shell mounts."""
+        self.push_screen(MainMenuScreen())
+
