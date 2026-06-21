@@ -100,6 +100,53 @@ The engineering design balances localized execution speed, offline data safety, 
 
 ## **🏗️ 4. Core Architectural Premises**
 
+OrcaLogy is designed under a clean **Hexagonal (Ports & Adapters) Architecture** to ensure that business rules are completely decoupled from external components like UI (CLI/TUI) and storage (plain-text files).
+
+```mermaid
+graph TD
+    subgraph UI_Clients [Primary Adapters: CLI & TUI]
+        CLI[Typer CLI / commands.py]
+        TUI[Textual TUI / app.py]
+    end
+
+    subgraph App_Layer [Application Services / Use Cases]
+        InitUC[InitializeBudgetUseCase]
+        RegUC[RegisterTransactionUseCase]
+        DevUC[GetCategoryDeviationRankingUseCase]
+        CloseUC[CloseBudgetCycleUseCase]
+    end
+
+    subgraph Core_Domain [Core Domain Layer: Pure & Isolated]
+        models["Domain Models: Budget, Transaction, Money"]
+        val[Budget Validator]
+        rank[Ranking Math]
+        ports[Repository Ports: ILedgerRepository]
+        errors[Domain Exceptions]
+    end
+
+    subgraph Infra_Adapters [Secondary Adapters: Infrastructure]
+        Repo[FileLedgerRepository]
+        Parser[Journal Parser]
+        Locker[File Concurrency Locker]
+    end
+
+    subgraph Storage [External System]
+        LedgerFile[("ledger.journal")]
+        LockFile[(".ledger.journal.lock")]
+    end
+
+    %% Flow of Control / Dependencies
+    CLI --> App_Layer
+    TUI --> App_Layer
+    App_Layer --> Core_Domain
+    Repo -.->|Implements| ports
+    App_Layer --> ports
+    Repo --> Parser
+    Repo --> Locker
+    Locker --> LockFile
+    Parser --> LedgerFile
+```
+
 *   **Premise 4.1 - Design & Modularity Strategy:** Hexagonal Architecture isolates the core business logic from outer infrastructure. The `orcalogy/domain` module remains a pure computational unit containing zero references to file-system, OS, or UI frameworks.
 *   **Premise 4.2 - Testing Strategy & Coverage Rule:** Test-First Development (TDD) cycle. No operational business feature is implemented before its corresponding `pytest` suite is committed and verified.
 *   **Premise 4.3 - Data Deletion & Auditing Policy:** Immutable append-only transaction ledger. Corrective transactions (e.g., negative offset adjustments) must be appended to rectify errors, preserving a complete historic audit trail.
