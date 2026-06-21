@@ -261,6 +261,12 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+- **[[TSK-49](TSK-49.md)]: Shared Read-Locks for Concurrency Isolation in Repository Reads**
+  - _Epic/Requirement Link:_ RF02 / Concurrency Safety
+  - _Estimation/Priority:_ P1 / Reach: 90, Impact: 2.5, Confidence: 0.9, Effort: 1 (RICE: 202.5)
+  - _TDD Test File:_ `tests/test_infra.py`
+  - _Status:_ To Do
+
 
 ### **📦 Backlog Phase 6: Packaging, CI/CD & Release Preparation**
 
@@ -354,6 +360,7 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-39](TSK-39.md)]:** Tag-based Analytics & Reporting
 - [ ] **[[TSK-40](TSK-40.md)]:** Multi-Format Report Exporter
 - [ ] **[[TSK-44](TSK-44.md)]:** Graceful Concurrency Lock Timeout Handling
+- [ ] **[[TSK-49](TSK-49.md)]:** Shared Read-Locks for Concurrency Isolation in Repository Reads (1 SP)
 - [ ] **[[TSK-45](TSK-45.md)]:** i18n JSON translation engine & config adapter (2 SP)
 - [ ] **[[TSK-46](TSK-46.md)]:** Textual TUI Widget String Translation Mapping (2 SP)
 - [ ] **[[TSK-47](TSK-47.md)]:** Interactive Language Selector Dialog & Helper Cards (1 SP)

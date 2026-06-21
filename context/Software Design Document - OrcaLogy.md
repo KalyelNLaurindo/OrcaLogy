@@ -357,6 +357,10 @@ orcalogy/
 - **ADR-003 (Concurrency):** Advisory file-level locking via `filelock`.
 - **ADR-004 (Value Object representation):** Native `Decimal` wrapped in `Money` to prevent rounding anomalies.
 - **ADR-005 (Graceful Concurrency Timeout Handling):** Map `filelock.Timeout` to a custom domain-level exception `LedgerConcurrencyError` to keep the domain clean of library dependencies, and handle it in UI adapters (CLI/TUI) to prevent raw tracebacks.
+- **ADR-006 (Reader-Writer Concurrency & Shared locks on Reading):**
+  - **Context:** Currently, `FileLockManager` only acquires exclusive locks during save/write operations. When reading budget data (`get_budget()`), no lock is acquired. Under high concurrency, a read operation could execute exactly in the millisecond when a writer has replaced `.meta.json` but has not yet updated the transaction journal, resulting in a dirty read (inconsistent/skewed state).
+  - **Decision:** Implement a Shared Read-Lock mechanism for all query/read operations. When reading budget data, the repository must acquire a shared lock (non-blocking for other readers, but blocks writers). Write operations will continue to acquire exclusive locks.
+  - **Rationale:** Prevents race conditions and guarantees transactional isolation (Read Committed/Repeatable Read level consistency) without blocking concurrent reading performance.
 
 
 ---
