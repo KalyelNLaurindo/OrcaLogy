@@ -46,6 +46,12 @@ class TestCliBaseCommands:
         assert result.exit_code == 0
         assert VERSION in result.output
 
+    def test_version_short_flag_returns_version_string(self) -> None:
+        """-V must print the current package version and exit cleanly."""
+        result = runner.invoke(app, ["-V"])
+        assert result.exit_code == 0
+        assert VERSION in result.output
+
     def test_unknown_command_returns_nonzero_exit(self) -> None:
         """An unrecognized subcommand must be rejected with a non-zero exit code."""
         result = runner.invoke(app, ["nonexistent-command"])
@@ -528,6 +534,26 @@ class TestConfigCommand:
         assert result.exit_code == 0
         assert config_file.exists()
         assert "[storage]" in config_file.read_text(encoding="utf-8")
+
+    def test_make_repo_handles_invalid_config_toml(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """When config.toml is invalid, _make_repo must fallback to default path."""
+        config_dir = tmp_path / ".orcalogy"
+        config_dir.mkdir()
+        config_file = config_dir / "config.toml"
+        # Write corrupted TOML content
+        config_file.write_text("corrupted content [invalid storage\n", encoding="utf-8")
+
+        monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+
+        from orcalogy.cli.commands import _make_repo
+        repo = _make_repo()
+        expected = tmp_path / ".orcalogy" / "data"
+        assert repo.data_dir == expected
+
 
 
 
