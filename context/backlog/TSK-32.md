@@ -11,10 +11,10 @@ Implement automated backups in `orcalogy/infra/file_repo.py`. Creates copy file 
 
 ## ✅ Definition of Ready (DoR)
 
-* [ ] Atomic writer repository is configured.
+* [x] Atomic writer repository is configured.
 
 ## 🏁 Definition of Done (DoD) & Acceptance Criteria
 
-* [ ] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
-* [ ] **[Functional - Backup]:** Automated copy created before write.
-* [ ] **[Verification]:** `pytest tests/test_infra.py::test_auto_backup_on_write` verifies backups match.
+* [x] **[Testing/Quality - TDD]:** Follow Red-Green-Refactor. Test suite written first and runs with failures (Red). Minimal implementation code written to pass (Green). Refactored code maintains green tests. All unit/integration tests pass.
+* [x] **[Functional - Backup]:** Automated copy created before write.
+* [x] **[Verification]:** `pytest tests/test_infra.py::test_auto_backup_on_write` verifies backups match.

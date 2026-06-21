@@ -86,6 +86,21 @@ class FileLedgerRepository:
         self._data_dir.mkdir(parents=True, exist_ok=True)
 
         with FileLockManager(str(self._lock_path(budget.month))):
+            journal_path = self._journal_path(budget.month)
+            if journal_path.exists():
+                import logging
+                import shutil
+                backup_path = Path(str(journal_path) + ".bak")
+                try:
+                    shutil.copy2(journal_path, backup_path)
+                    logging.info(
+                        "Created automated backup for budget month %s: %s",
+                        budget.month,
+                        backup_path.name,
+                    )
+                except Exception as exc:
+                    logging.error("Failed to create automated backup: %s", exc)
+
             self._write_meta(budget)
             self._write_journal(budget)
 

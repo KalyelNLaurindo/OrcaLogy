@@ -573,3 +573,55 @@ def test_read_only_breaker(tmp_path: Path) -> None:
     with pytest.raises(ReadOnlyException):
         repo.save_budget(budget)
 
+
+def test_auto_backup_on_write(tmp_path: Path) -> None:
+    """Verify that saving a budget creates a journal backup first."""
+    import datetime
+
+    from orcalogy.domain.models import Budget, BudgetCategory, Money, Transaction
+
+    repo = FileLedgerRepository(str(tmp_path))
+    month = "2026-06"
+    budget = Budget(month=month)
+    budget.add_category(BudgetCategory(name="Food", limit=Money("500.00")))
+    
+    # 1. Save empty budget or first transaction
+    tx1 = Transaction(
+        tx_id="tx_1",
+        date=datetime.date(2026, 6, 15),
+        category="Food",
+        amount=Money("100.00"),
+        description="First purchase"
+    )
+    budget.transactions.append(tx1)
+    repo.save_budget(budget)
+
+    # No backup exists yet as there was no existing file on first write
+    backup_file = tmp_path / f"ledger_{month}.journal.bak"
+    assert not backup_file.exists()
+
+    # 2. Add second transaction and save again
+    tx2 = Transaction(
+        tx_id="tx_2",
+        date=datetime.date(2026, 6, 16),
+        category="Food",
+        amount=Money("50.00"),
+        description="Second purchase"
+    )
+    budget.transactions.append(tx2)
+    repo.save_budget(budget)
+
+    # 3. Verify backup file was created
+    assert backup_file.exists()
+
+    # Verify backup contains only the first transaction
+    backup_content = backup_file.read_text(encoding="utf-8")
+    assert "First purchase" in backup_content
+    assert "Second purchase" not in backup_content
+
+    # Verify original journal file contains both
+    orig_path = tmp_path / f"ledger_{month}.journal"
+    original_content = orig_path.read_text(encoding="utf-8")
+    assert "First purchase" in original_content
+    assert "Second purchase" in original_content
+
