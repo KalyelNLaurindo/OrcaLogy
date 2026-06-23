@@ -105,8 +105,7 @@ def _parse_line(
             line_number=line_number,
             raw_line=raw_line,
             message=(
-                f"Invalid amount '{amount_str}'."
-                " Must be a positive decimal number."
+                f"Invalid amount '{amount_str}'. Must be a positive decimal number."
             ),
         )
 

@@ -57,7 +57,7 @@ def setup_logging(log_file_path: Path | None = None) -> None:
     handler.setFormatter(JsonFormatter())
 
     root_logger = logging.getLogger()
-    
+
     # Avoid duplicate rotating handlers if setup_logging is called multiple times
     for h in list(root_logger.handlers):
         if isinstance(h, logging.handlers.RotatingFileHandler):
@@ -69,4 +69,3 @@ def setup_logging(log_file_path: Path | None = None) -> None:
 
 if __name__ == "__main__":
     app()
-

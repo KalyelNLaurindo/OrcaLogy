@@ -81,6 +81,7 @@ class FileLedgerRepository:
         """
         if budget.read_only:
             from orcalogy.domain.errors import ReadOnlyException
+
             raise ReadOnlyException("Cannot save a read-only budget.")
 
         self._data_dir.mkdir(parents=True, exist_ok=True)
@@ -90,6 +91,7 @@ class FileLedgerRepository:
             if journal_path.exists():
                 import logging
                 import shutil
+
                 backup_path = Path(str(journal_path) + ".bak")
                 try:
                     shutil.copy2(journal_path, backup_path)
@@ -113,8 +115,7 @@ class FileLedgerRepository:
         meta = {
             "status": budget.status,
             "categories": {
-                name: str(cat.limit.amount)
-                for name, cat in budget.categories.items()
+                name: str(cat.limit.amount) for name, cat in budget.categories.items()
             },
         }
         tmp = self._meta_tmp(budget.month)

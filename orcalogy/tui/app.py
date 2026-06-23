@@ -44,4 +44,3 @@ class OrcaLogyApp(App[None]):
     def on_mount(self) -> None:
         """Push the menu as the first active screen after the shell mounts."""
         self.push_screen(MainMenuScreen())
-

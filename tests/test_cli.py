@@ -350,7 +350,7 @@ class TestCloseCommand:
             "2026-06", {"Alimentação": Money("100")}
         )
         monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
-        
+
         result = runner.invoke(app, ["close", "--month", "2026-06"])
         assert result.exit_code == 0
         assert "fechado" in result.output.lower()
@@ -394,10 +394,10 @@ class TestCloseCommand:
             "2026-06", {"Alimentação": Money("100")}
         )
         monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: tmp_repo)
-        
+
         # Close once
         runner.invoke(app, ["close", "--month", "2026-06"])
-        
+
         # Close twice
         result = runner.invoke(app, ["close", "--month", "2026-06"])
         assert result.exit_code != 0
@@ -486,7 +486,7 @@ class TestConfigCommand:
         config_dir.mkdir()
         config_file = config_dir / "config.toml"
         custom_data_dir = tmp_path / "custom_data"
-        
+
         # Write config.toml using raw POSIX/Windows string representation
         escaped_path = str(custom_data_dir).replace("\\", "\\\\")
         config_file.write_text(
@@ -497,6 +497,7 @@ class TestConfigCommand:
         monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
         from orcalogy.cli.commands import _make_repo
+
         repo = _make_repo()
         assert repo.data_dir == custom_data_dir
 
@@ -509,6 +510,7 @@ class TestConfigCommand:
         monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
         from orcalogy.cli.commands import _make_repo
+
         repo = _make_repo()
         expected = tmp_path / ".orcalogy" / "data"
         assert repo.data_dir == expected
@@ -523,6 +525,7 @@ class TestConfigCommand:
 
         # Mock repository generation so it writes to our tmp_path
         from orcalogy.infra.file_repo import FileLedgerRepository
+
         data_dir = tmp_path / ".orcalogy" / "data"
         mock_repo = FileLedgerRepository(str(data_dir))
         monkeypatch.setattr("orcalogy.cli.commands._make_repo", lambda: mock_repo)
@@ -550,10 +553,7 @@ class TestConfigCommand:
         monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
         from orcalogy.cli.commands import _make_repo
+
         repo = _make_repo()
         expected = tmp_path / ".orcalogy" / "data"
         assert repo.data_dir == expected
-
-
-
-

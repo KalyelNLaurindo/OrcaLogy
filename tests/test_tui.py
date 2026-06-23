@@ -145,10 +145,13 @@ async def test_dashboard_population(tmp_path: Path) -> None:
     repo = FileLedgerRepository(str(tmp_path))
     month = datetime.date.today().strftime("%Y-%m")
 
-    InitializeBudgetUseCase(repo).execute(month, {
-        "Food": Money("500.00"),
-        "Transport": Money("150.00"),
-    })
+    InitializeBudgetUseCase(repo).execute(
+        month,
+        {
+            "Food": Money("500.00"),
+            "Transport": Money("150.00"),
+        },
+    )
     RegisterTransactionUseCase(repo).execute(
         Transaction(
             tx_id="tx-dash-01",

@@ -54,6 +54,7 @@ def _make_repo() -> FileLedgerRepository:
     if config_file.exists():
         try:
             import tomllib
+
             with config_file.open("rb") as f:
                 data = tomllib.load(f)
             custom_dir = data.get("storage", {}).get("data_dir", None)
@@ -78,6 +79,7 @@ def main(
 ) -> None:
     """OrcaLogy budget CLI — run a subcommand or use --help."""
     from orcalogy.main import setup_logging
+
     setup_logging()
 
     if version:
@@ -169,7 +171,6 @@ def add_transaction(
     except BudgetClosedError as exc:
         typer.echo(f"Erro: o ciclo de orçamento está fechado. {exc}")
         raise typer.Exit(1) from exc
-
 
 
 @app.command("tui")
@@ -274,5 +275,3 @@ def status(
     typer.echo(f"Spent: {total_spent}")
     typer.echo(f"Remaining: {remaining}")
     typer.echo(f"Overrun: {overrun_count}")
-
-

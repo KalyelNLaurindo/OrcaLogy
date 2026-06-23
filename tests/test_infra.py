@@ -324,8 +324,7 @@ def test_parse_journal_file_handles_empty_file(tmp_path: Path) -> None:
 def test_parse_journal_file_handles_only_comments(tmp_path: Path) -> None:
     journal = tmp_path / "ledger.journal"
     journal.write_text(
-        "# isso é um arquivo só com comentários\n"
-        "# nenhuma transação aqui\n",
+        "# isso é um arquivo só com comentários\n# nenhuma transação aqui\n",
         encoding="utf-8",
     )
 
@@ -532,19 +531,17 @@ def test_read_only_breaker(tmp_path: Path) -> None:
 
     repo = FileLedgerRepository(str(tmp_path))
     month = "2026-06"
-    
+
     # 1. Create a metadata file
     meta_file = tmp_path / f"ledger_{month}.meta.json"
     meta_file.write_text(
-        '{"status": "ACTIVE", "categories": {"Food": "500.00"}}',
-        encoding="utf-8"
+        '{"status": "ACTIVE", "categories": {"Food": "500.00"}}', encoding="utf-8"
     )
 
     # 2. Write a corrupted journal file
     journal_file = tmp_path / f"ledger_{month}.journal"
     journal_file.write_text(
-        "2026-06-15 | Food | corrupted_amount | Supermarket\n",
-        encoding="utf-8"
+        "2026-06-15 | Food | corrupted_amount | Supermarket\n", encoding="utf-8"
     )
 
     # 3. Load budget - must lock state to read-only
@@ -560,7 +557,7 @@ def test_read_only_breaker(tmp_path: Path) -> None:
                 date=datetime.date(2026, 6, 16),
                 category="Food",
                 amount=Money("50.00"),
-                description="Lunch"
+                description="Lunch",
             )
         )
 
@@ -584,14 +581,14 @@ def test_auto_backup_on_write(tmp_path: Path) -> None:
     month = "2026-06"
     budget = Budget(month=month)
     budget.add_category(BudgetCategory(name="Food", limit=Money("500.00")))
-    
+
     # 1. Save empty budget or first transaction
     tx1 = Transaction(
         tx_id="tx_1",
         date=datetime.date(2026, 6, 15),
         category="Food",
         amount=Money("100.00"),
-        description="First purchase"
+        description="First purchase",
     )
     budget.transactions.append(tx1)
     repo.save_budget(budget)
@@ -606,7 +603,7 @@ def test_auto_backup_on_write(tmp_path: Path) -> None:
         date=datetime.date(2026, 6, 16),
         category="Food",
         amount=Money("50.00"),
-        description="Second purchase"
+        description="Second purchase",
     )
     budget.transactions.append(tx2)
     repo.save_budget(budget)
@@ -624,4 +621,3 @@ def test_auto_backup_on_write(tmp_path: Path) -> None:
     original_content = orig_path.read_text(encoding="utf-8")
     assert "First purchase" in original_content
     assert "Second purchase" in original_content
-

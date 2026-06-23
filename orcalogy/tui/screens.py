@@ -47,11 +47,27 @@ class MainMenuScreen(Screen[None]):
             yield Label("🐳 OrcaLogy — Painel Financeiro Local", id="menu-title")
             yield Label(f"Mês Ativo de Referência: {month}", id="menu-subtitle")
             yield Label("\nSelecione uma opção abaixo:", id="menu-instructions")
-            
-            yield Button("📊 Visualizar Painel do Mês (Dashboard)", id="btn-goto-dashboard", variant="primary")
-            yield Button("➕ Registrar Nova Despesa (Transação)", id="btn-new-tx", variant="default")
-            yield Button("⚙️ Criar / Configurar Orçamento Mensal", id="btn-init-budget", variant="default")
-            yield Button("🔒 Fechar Ciclo Mensal (Bloquear Mês)", id="btn-close-cycle", variant="default")
+
+            yield Button(
+                "📊 Visualizar Painel do Mês (Dashboard)",
+                id="btn-goto-dashboard",
+                variant="primary",
+            )
+            yield Button(
+                "➕ Registrar Nova Despesa (Transação)",
+                id="btn-new-tx",
+                variant="default",
+            )
+            yield Button(
+                "⚙️ Criar / Configurar Orçamento Mensal",
+                id="btn-init-budget",
+                variant="default",
+            )
+            yield Button(
+                "🔒 Fechar Ciclo Mensal (Bloquear Mês)",
+                id="btn-close-cycle",
+                variant="default",
+            )
             yield Button("🚪 Sair do Aplicativo", id="btn-quit", variant="error")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -83,16 +99,24 @@ class BudgetInitDialog(ModalScreen[None]):
         default_month = datetime.date.today().strftime("%Y-%m")
         with Vertical(id="dialog"):
             yield Label("Configurar Novo Orçamento", id="dialog-title")
-            yield Input(value=default_month, placeholder="Mês (formato AAAA-MM, ex: 2026-06)", id="input-month")
-            
+            yield Input(
+                value=default_month,
+                placeholder="Mês (formato AAAA-MM, ex: 2026-06)",
+                id="input-month",
+            )
+
             yield Label("--- Adicionar Categoria ---", id="section-title")
-            yield Input(placeholder="Nome da Categoria (ex: Alimentação)", id="input-cat-name")
-            yield Input(placeholder="Limite da Categoria (ex: 500.00)", id="input-cat-limit")
+            yield Input(
+                placeholder="Nome da Categoria (ex: Alimentação)", id="input-cat-name"
+            )
+            yield Input(
+                placeholder="Limite da Categoria (ex: 500.00)", id="input-cat-limit"
+            )
             yield Button("Adicionar Categoria", id="btn-add-cat")
-            
+
             yield Label("Categorias Adicionadas: Nenhuma", id="added-cats-label")
             yield Label("", id="dialog-error")
-            
+
             with Horizontal(id="dialog-buttons"):
                 yield Button("Salvar Orçamento", id="btn-save", variant="primary")
                 yield Button("Cancelar", id="btn-cancel", variant="error")
@@ -113,37 +137,39 @@ class BudgetInitDialog(ModalScreen[None]):
         name_input = self.query_one("#input-cat-name", Input)
         limit_input = self.query_one("#input-cat-limit", Input)
         error_label = self.query_one("#dialog-error", Label)
-        
+
         name = name_input.value.strip()
         limit_str = limit_input.value.strip()
-        
+
         if not name or not limit_str:
             error_label.update("Informe o nome e o limite da categoria.")
             return
-            
+
         try:
             self.categories[name] = Money(limit_str)
             name_input.value = ""
             limit_input.value = ""
             error_label.update("")
-            
+
             cats_text = ", ".join(f"{k} (R$ {v})" for k, v in self.categories.items())
-            self.query_one("#added-cats-label", Label).update(f"Categorias Adicionadas: {cats_text}")
+            self.query_one("#added-cats-label", Label).update(
+                f"Categorias Adicionadas: {cats_text}"
+            )
         except (ValueError, TypeError) as exc:
             error_label.update(f"Valor limite inválido: {exc}")
 
     def _save_budget(self) -> None:
         month = self.query_one("#input-month", Input).value.strip()
         error_label = self.query_one("#dialog-error", Label)
-        
+
         if not month:
             error_label.update("Informe o mês do orçamento.")
             return
-            
+
         if not self.categories:
             error_label.update("Adicione pelo menos uma categoria.")
             return
-            
+
         orca_app = cast("OrcaLogyApp", self.app)
         try:
             InitializeBudgetUseCase(orca_app.repository).execute(month, self.categories)
@@ -163,10 +189,17 @@ class CloseCycleDialog(ModalScreen[None]):
         default_month = datetime.date.today().strftime("%Y-%m")
         with Vertical(id="dialog"):
             yield Label("Fechar Ciclo Mensal", id="dialog-title")
-            yield Label("Ao fechar o ciclo, novas transações serão bloqueadas permanentemente.", id="dialog-desc")
-            yield Input(value=default_month, placeholder="Mês (AAAA-MM, ex: 2026-06)", id="input-month")
+            yield Label(
+                "Ao fechar o ciclo, novas transações serão bloqueadas permanentemente.",
+                id="dialog-desc",
+            )
+            yield Input(
+                value=default_month,
+                placeholder="Mês (AAAA-MM, ex: 2026-06)",
+                id="input-month",
+            )
             yield Label("", id="dialog-error")
-            
+
             with Horizontal(id="dialog-buttons"):
                 yield Button("Confirmar Fechamento", id="btn-close", variant="primary")
                 yield Button("Cancelar", id="btn-cancel", variant="error")
@@ -184,11 +217,11 @@ class CloseCycleDialog(ModalScreen[None]):
     def _close_cycle(self) -> None:
         month = self.query_one("#input-month", Input).value.strip()
         error_label = self.query_one("#dialog-error", Label)
-        
+
         if not month:
             error_label.update("Informe o mês.")
             return
-            
+
         orca_app = cast("OrcaLogyApp", self.app)
         try:
             CloseBudgetCycleUseCase(orca_app.repository).execute(month)
@@ -210,12 +243,12 @@ class TransactionEntryDialog(ModalScreen[None]):
 
     def compose(self) -> ComposeResult:
         from textual.suggester import SuggestFromList
-        
+
         today = datetime.date.today().isoformat()
         orca_app = cast("OrcaLogyApp", self.app)
         month = datetime.date.today().strftime("%Y-%m")
         categories: list[str] = []
-        
+
         try:
             budget = orca_app.repository.get_budget(month)
             if budget:
@@ -233,7 +266,9 @@ class TransactionEntryDialog(ModalScreen[None]):
                 suggester=category_suggester,
             )
             yield Input(placeholder="Valor (ex: 50.00)", id="input-amount")
-            yield Input(placeholder="Descrição (ex: Almoço de negócios)", id="input-description")
+            yield Input(
+                placeholder="Descrição (ex: Almoço de negócios)", id="input-description"
+            )
             yield Input(
                 value=today,
                 placeholder="Data (AAAA-MM-DD)",
@@ -293,9 +328,7 @@ class TransactionEntryDialog(ModalScreen[None]):
 
         self._persist(tx, force=False, error_label=error_label)
 
-    def _persist(
-        self, tx: Transaction, force: bool, error_label: Label
-    ) -> None:
+    def _persist(self, tx: Transaction, force: bool, error_label: Label) -> None:
         orca_app = cast("OrcaLogyApp", self.app)
 
         try:
@@ -355,18 +388,16 @@ class DashboardScreen(Screen[None]):
         orca_app = cast("OrcaLogyApp", self.app)
         month = datetime.date.today().strftime("%Y-%m")
 
-        category_table: DataTable[Any] = self.query_one(
-            "#category-table", DataTable
-        )
+        category_table: DataTable[Any] = self.query_one("#category-table", DataTable)
         tx_table: DataTable[Any] = self.query_one("#tx-table", DataTable)
 
         category_table.clear(columns=True)
         tx_table.clear(columns=True)
 
         try:
-            ranking = GetCategoryDeviationRankingUseCase(
-                orca_app.repository
-            ).execute(month)
+            ranking = GetCategoryDeviationRankingUseCase(orca_app.repository).execute(
+                month
+            )
         except BudgetNotFoundError:
             category_table.add_columns("Status")
             category_table.add_row(
@@ -377,7 +408,9 @@ class DashboardScreen(Screen[None]):
             return
 
         # Populate category deviation table - Color-coded
-        category_table.add_columns("Categoria", "Limite (R$)", "Gasto (R$)", "Desvio (%)")
+        category_table.add_columns(
+            "Categoria", "Limite (R$)", "Gasto (R$)", "Desvio (%)"
+        )
         for item in ranking:
             deviation_str = f"{item.deviation:+.2f}%"
             if item.deviation > 20:
@@ -398,9 +431,9 @@ class DashboardScreen(Screen[None]):
         budget = orca_app.repository.get_budget(month)
         if budget and budget.transactions:
             tx_table.add_columns("Data", "Categoria", "Valor (R$)", "Descrição")
-            recent = sorted(
-                budget.transactions, key=lambda t: t.date, reverse=True
-            )[:_MAX_RECENT_TRANSACTIONS]
+            recent = sorted(budget.transactions, key=lambda t: t.date, reverse=True)[
+                :_MAX_RECENT_TRANSACTIONS
+            ]
             for tx in recent:
                 tx_table.add_row(
                     str(tx.date),

@@ -95,6 +95,7 @@ class CloseBudgetCycleUseCase:
             raise BudgetNotFoundError(f"Budget for month {month} was not found.")
 
         from orcalogy.domain.errors import BudgetClosedError
+
         if budget.status == "CLOSED":
             raise BudgetClosedError(
                 f"Budget cycle for month {month} is already closed."
