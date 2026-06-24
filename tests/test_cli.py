@@ -57,6 +57,17 @@ class TestCliBaseCommands:
         result = runner.invoke(app, ["nonexistent-command"])
         assert result.exit_code != 0
 
+    def test_default_without_args_runs_tui(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Invoking orca without arguments should boot the TUI app."""
+        from unittest.mock import MagicMock
+        mock_app = MagicMock()
+        monkeypatch.setattr("orcalogy.cli.commands.OrcaLogyApp", mock_app)
+        
+        result = runner.invoke(app, [])
+        assert result.exit_code == 0
+        mock_app.return_value.run.assert_called_once()
+
+
 
 # ---------------------------------------------------------------------------
 # orca init

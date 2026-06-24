@@ -36,7 +36,7 @@ _RESET = "\033[0m"
 app = typer.Typer(
     name="orca",
     help="OrcaLogy — local-first budget management CLI.",
-    no_args_is_help=True,
+    no_args_is_help=False,
     invoke_without_command=True,
     add_completion=True,
 )
@@ -67,8 +67,9 @@ def _make_repo() -> FileLedgerRepository:
     return FileLedgerRepository(str(data_dir))
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
+    ctx: typer.Context,
     version: bool | None = typer.Option(
         None,
         "--version",
@@ -85,6 +86,11 @@ def main(
     if version:
         typer.echo(f"orca version {VERSION}")
         raise typer.Exit()
+
+    if ctx.invoked_subcommand is None:
+        repo = _make_repo()
+        OrcaLogyApp(repository=repo).run()
+
 
 
 @app.command("init")
