@@ -381,6 +381,7 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-47](TSK-47.md)]:** Interactive Language Selector Dialog & Helper Cards (1 SP)
 - [ ] **[[TSK-48](TSK-48.md)]:** TUI & Textual Screen-Reader Adaptations & Contrast Policy (1 SP)
 - [ ] **[[TSK-51](TSK-51.md)]:** HTTP REST API Backend Server Integration (3 SP)
+- [ ] **[[TSK-52](TSK-52.md)]:** Terminal UI/UX Overhaul — CLI & TUI Visual Redesign (3 SP)
 
 
 
