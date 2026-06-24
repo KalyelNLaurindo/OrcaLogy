@@ -334,6 +334,14 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+### **🔧 Backlog Phase 8: CI Quality & Cross-Platform Stability**
+
+- **[[TSK-50](TSK-50.md)]: Fix Cross-Platform CI Failures — Unicode & TUI on Linux**
+  - _Epic/Requirement Link:_ CI Stability / Cross-Platform Quality
+  - _Estimation/Priority:_ P1 / Reach: 100, Impact: 3, Confidence: 0.8, Effort: 3 (RICE: 80)
+  - _TDD Test File:_ `tests/test_tui.py`, `.github/workflows/ci.yml`
+  - _Status:_ To Do
+
 ### **🎨 Backlog Phase 7.2: Acessibilidade & UX Modal Interativo**
 
 - **[[TSK-47](TSK-47.md)]: Interactive Language Selector Dialog & Helper Cards**
@@ -348,9 +356,15 @@ The backlog is structured sequentially based on the active phases defined in the
   - _TDD Test File:_ `tests/test_infra.py`
   - _Status:_ To Do
 
+- **[[TSK-51](TSK-51.md)]: HTTP REST API Backend Server Integration**
+  - _Epic/Requirement Link:_ HTTP Backend Services
+  - _Estimation/Priority:_ P2 / Reach: 95, Impact: 3.0, Confidence: 0.9, Effort: 3 (RICE: 85.5)
+  - _TDD Test File:_ `tests/test_cli.py`
+  - _Status:_ To Do
+
 ---
 
-## **3. 📋 Basic Markdown Kanban Board**
+## **2. 📋 Basic Markdown Kanban Board**
 
 ### **🔴 To Do (Ready for Development)**
 
@@ -361,10 +375,13 @@ The backlog is structured sequentially based on the active phases defined in the
 - [ ] **[[TSK-40](TSK-40.md)]:** Multi-Format Report Exporter
 - [ ] **[[TSK-44](TSK-44.md)]:** Graceful Concurrency Lock Timeout Handling
 - [ ] **[[TSK-49](TSK-49.md)]:** Shared Read-Locks for Concurrency Isolation in Repository Reads (1 SP)
+- [ ] **[[TSK-50](TSK-50.md)]:** Fix Cross-Platform CI Failures — Unicode & TUI on Linux (P1)
 - [ ] **[[TSK-45](TSK-45.md)]:** i18n JSON translation engine & config adapter (2 SP)
 - [ ] **[[TSK-46](TSK-46.md)]:** Textual TUI Widget String Translation Mapping (2 SP)
 - [ ] **[[TSK-47](TSK-47.md)]:** Interactive Language Selector Dialog & Helper Cards (1 SP)
 - [ ] **[[TSK-48](TSK-48.md)]:** TUI & Textual Screen-Reader Adaptations & Contrast Policy (1 SP)
+- [ ] **[[TSK-51](TSK-51.md)]:** HTTP REST API Backend Server Integration (3 SP)
+
 
 
 ### **🟡 In Progress (Actively Being Built)**
