@@ -160,7 +160,6 @@ graph TD
 orcalogy/
 ├── pyproject.toml              # Dependency & tool configuration (Poetry, pytest, ruff, mypy)
 ├── README.md                   # Repository Entry Point
-├── CLAUDE.md                   # AI assistant reference guide
 ├── orcalogy/                   # Main Application Source
 │   ├── __init__.py
 │   ├── main.py                 # CLI entry point (exposes Typer app)
@@ -210,7 +209,7 @@ orcalogy/
 
 1. Clone this repository locally to your workspace:
    ```bash
-   git clone https://github.com/your-org/orcalogy.git
+   git clone https://github.com/KalyelNLaurindo/orcalogy.git
    cd orcalogy
    ```
 
@@ -250,6 +249,20 @@ Ensure your modifications pass the quality gates before opening a Pull Request:
   ```bash
   poetry run ruff check .
   ```
+
+---
+
+## **🗺️ 7. Planned Roadmap: HTTP REST API Backend**
+
+As detailed in task [TSK-51](context/backlog/TSK-51.md), we are planning to expose OrcaLogy's budget engine via a lightweight REST HTTP server using FastAPI. This will allow external dashboards, mobile companions, and integrations to interact with the budget ledger remotely:
+
+* `POST /budgets/init` — Initialize a new monthly budget with category limits.
+* `POST /transactions` — Register a new financial transaction (triggers ceiling validation).
+* `GET /budgets/{month}/status` — Retrieve full budget snapshot for a given month.
+* `GET /budgets/{month}/report` — Retrieve the deviation ranking report for a month.
+* `POST /budgets/{month}/close` — Lock the fiscal cycle for a given month.
+
+The local CLI/TUI remains the primary interface. The HTTP layer will be an optional, opt-in adapter that wraps the existing application use cases without modifying the domain.
 
 ---
 
